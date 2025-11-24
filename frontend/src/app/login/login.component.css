@@ -1,0 +1,132 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 450px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.2) !important;
+  border-radius: 16px !important;
+  overflow: hidden;
+}
+
+.login-header {
+  text-align: center;
+  padding: 32px 24px 16px;
+  background: linear-gradient(135deg, #d32f2f 0%, #f44336 100%);
+  color: white;
+  width: 100%;
+}
+
+.logo-icon {
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 16px;
+  display: block;
+}
+
+.login-header h1 {
+  margin: 0 0 8px 0;
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.subtitle {
+  margin: 0;
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+mat-card-content {
+  padding: 32px 24px !important;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.login-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background: #ffebee;
+  border-radius: 8px;
+  color: #c62828;
+  font-size: 14px;
+}
+
+.login-error mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.login-success {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background: #e8f5e9;
+  border-radius: 8px;
+  color: #2e7d32;
+  font-size: 14px;
+}
+
+.login-success mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.login-button {
+  height: 48px;
+  font-size: 16px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 8px;
+}
+
+.register-link {
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+  margin-top: 8px;
+}
+
+.register-link a {
+  color: #1976d2;
+  text-decoration: none;
+  font-weight: 600;
+  margin-left: 4px;
+  transition: color 0.2s;
+}
+
+.register-link a:hover {
+  color: #0d47a1;
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .login-card {
+    max-width: 100%;
+  }
+
+  .login-header h1 {
+    font-size: 20px;
+  }
+
+  mat-card-content {
+    padding: 24px 16px !important;
+  }
+}

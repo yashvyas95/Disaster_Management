@@ -1,0 +1,459 @@
+package com.disaster.service;
+
+import com.disaster.dto.RescueTeamDto;
+import com.disaster.entity.Department;
+import com.disaster.entity.RescueTeam;
+import com.disaster.entity.TeamStatus;
+import com.disaster.exception.ResourceNotFoundException;
+import com.disaster.repository.DepartmentRepository;
+import com.disaster.repository.RescueTeamRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
+/**
+ * Unit tests for RescueTeamService
+ * Tests team management, status updates, and availability tracking
+ */
+@ExtendWith(MockitoExtension.class)
+@DisplayName("Rescue Team Service Tests")
+class RescueTeamServiceTest {
+
+    @Mock
+    private RescueTeamRepository teamRepository;
+
+    @Mock
+    private DepartmentRepository departmentRepository;
+
+    @InjectMocks
+    private RescueTeamService teamService;
+
+    private RescueTeam testTeam;
+    private Department testDepartment;
+    private RescueTeamDto teamDto;
+
+    @BeforeEach
+    void setUp() {
+        // Create test department
+        testDepartment = new Department();
+        testDepartment.setId(1L);
+        testDepartment.setName("Fire Department");
+        testDepartment.setContactNumber("555-1234");
+
+        // Create test rescue team
+        testTeam = new RescueTeam();
+        testTeam.setId(1L);
+        testTeam.setName("Fire Rescue Alpha");
+        testTeam.setStatus(TeamStatus.AVAILABLE);
+        testTeam.setDepartment(testDepartment);
+        testTeam.setMemberCount(5);
+        testTeam.setContactNumber("555-5678");
+
+        // Create test DTO
+        teamDto = new RescueTeamDto();
+        teamDto.setName("Fire Rescue Bravo");
+        teamDto.setDepartmentId(1L);
+        teamDto.setMemberCount(6);
+        teamDto.setContactNumber("555-9999");
+    }
+
+    @Test
+    @DisplayName("Should create rescue team successfully")
+    void testCreateTeam() {
+        // Arrange
+        when(departmentRepository.findById(1L)).thenReturn(Optional.of(testDepartment));
+        when(teamRepository.save(any(RescueTeam.class))).thenReturn(testTeam);
+
+        // Act
+        RescueTeam created = teamService.createTeam(teamDto);
+
+        // Assert
+        assertNotNull(created, "Created team should not be null");
+        assertEquals(testTeam.getId(), created.getId());
+        assertEquals(testTeam.getName(), created.getName());
+        verify(departmentRepository).findById(1L);
+        verify(teamRepository).save(any(RescueTeam.class));
+    }
+
+    @Test
+    @DisplayName("Should throw exception when creating team with invalid department")
+    void testCreateTeamWithInvalidDepartment() {
+        // Arrange
+        when(departmentRepository.findById(999L)).thenReturn(Optional.empty());
+        teamDto.setDepartmentId(999L);
+
+        // Act & Assert
+        assertThrows(ResourceNotFoundException.class, 
+            () -> teamService.createTeam(teamDto),
+            "Should throw ResourceNotFoundException for invalid department");
+        verify(departmentRepository).findById(999L);
+        verify(teamRepository, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("Should retrieve team by ID")
+    void testGetTeamById() {
+        // Arrange
+        when(teamRepository.findById(1L)).thenReturn(Optional.of(testTeam));
+
+        // Act
+        RescueTeam found = teamService.getTeamById(1L);
+
+        // Assert
+        assertNotNull(found);
+        assertEquals(testTeam.getId(), found.getId());
+        assertEquals(testTeam.getName(), found.getName());
+        verify(teamRepository).findById(1L);
+    }
+
+    @Test
+    @DisplayName("Should throw exception when team not found by ID")
+    void testGetTeamByIdNotFound() {
+        // Arrange
+        when(teamRepository.findById(999L)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(ResourceNotFoundException.class, 
+            () -> teamService.getTeamById(999L),
+            "Should throw ResourceNotFoundException when team not found");
+    }
+
+    @Test
+    @DisplayName("Should retrieve all rescue teams")
+    void testGetAllTeams() {
+        // Arrange
+        RescueTeam team2 = new RescueTeam();
+        team2.setId(2L);
+        team2.setName("Medical Response Team 1");
+        team2.setStatus(TeamStatus.BUSY);
+
+        List<RescueTeam> teams = Arrays.asList(testTeam, team2);
+        when(teamRepository.findAll()).thenReturn(teams);
+
+        // Act
+        List<RescueTeam> result = teamService.getAllTeams();
+
+        // Assert
+        assertEquals(2, result.size(), "Should return 2 teams");
+        assertEquals("Fire Rescue Alpha", result.get(0).getName());
+        assertEquals("Medical Response Team 1", result.get(1).getName());
+        verify(teamRepository).findAll();
+    }
+
+    @Test
+    @DisplayName("Should retrieve teams by department")
+    void testGetTeamsByDepartment() {
+        // Arrange
+        when(teamRepository.findByDepartmentId(1L)).thenReturn(Arrays.asList(testTeam));
+
+        // Act
+        List<RescueTeam> result = teamService.getTeamsByDepartment(1L);
+
+        // Assert
+        assertEquals(1, result.size(), "Should return 1 team for department");
+        assertEquals(testTeam.getName(), result.get(0).getName());
+        verify(teamRepository).findByDepartmentId(1L);
+    }
+
+    @Test
+    @DisplayName("Should retrieve available teams only")
+    void testGetAvailableTeams() {
+        // Arrange
+        RescueTeam team2 = new RescueTeam();
+        team2.setId(2L);
+        team2.setName("Fire Rescue Bravo");
+        team2.setStatus(TeamStatus.AVAILABLE);
+
+        when(teamRepository.findByStatus(TeamStatus.AVAILABLE))
+            .thenReturn(Arrays.asList(testTeam, team2));
+
+        // Act
+        List<RescueTeam> result = teamService.getAvailableTeams();
+
+        // Assert
+        assertEquals(2, result.size(), "Should return 2 available teams");
+        assertTrue(result.stream().allMatch(t -> t.getStatus() == TeamStatus.AVAILABLE),
+            "All teams should have AVAILABLE status");
+        verify(teamRepository).findByStatus(TeamStatus.AVAILABLE);
+    }
+
+    @Test
+    @DisplayName("Should update team status to BUSY")
+    void testUpdateTeamStatusToBusy() {
+        // Arrange
+        when(teamRepository.findById(1L)).thenReturn(Optional.of(testTeam));
+        when(teamRepository.save(any(RescueTeam.class))).thenReturn(testTeam);
+
+        // Act
+        RescueTeam updated = teamService.updateTeamStatus(1L, TeamStatus.BUSY);
+
+        // Assert
+        assertEquals(TeamStatus.BUSY, updated.getStatus(), "Team status should be BUSY");
+        verify(teamRepository).findById(1L);
+        verify(teamRepository).save(testTeam);
+    }
+
+    @Test
+    @DisplayName("Should update team status to EN_ROUTE")
+    void testUpdateTeamStatusToEnRoute() {
+        // Arrange
+        when(teamRepository.findById(1L)).thenReturn(Optional.of(testTeam));
+        when(teamRepository.save(any(RescueTeam.class))).thenReturn(testTeam);
+
+        // Act
+        RescueTeam updated = teamService.updateTeamStatus(1L, TeamStatus.EN_ROUTE);
+
+        // Assert
+        assertEquals(TeamStatus.EN_ROUTE, updated.getStatus(), "Team status should be EN_ROUTE");
+        verify(teamRepository).save(testTeam);
+    }
+
+    @Test
+    @DisplayName("Should update team status to AVAILABLE after completion")
+    void testUpdateTeamStatusToAvailable() {
+        // Arrange
+        testTeam.setStatus(TeamStatus.BUSY);
+        when(teamRepository.findById(1L)).thenReturn(Optional.of(testTeam));
+        when(teamRepository.save(any(RescueTeam.class))).thenReturn(testTeam);
+
+        // Act
+        RescueTeam updated = teamService.updateTeamStatus(1L, TeamStatus.AVAILABLE);
+
+        // Assert
+        assertEquals(TeamStatus.AVAILABLE, updated.getStatus(), 
+            "Team status should be AVAILABLE after completing task");
+        verify(teamRepository).save(testTeam);
+    }
+
+    @Test
+    @DisplayName("Should delete team successfully")
+    void testDeleteTeam() {
+        // Arrange
+        when(teamRepository.findById(1L)).thenReturn(Optional.of(testTeam));
+        doNothing().when(teamRepository).delete(testTeam);
+
+        // Act
+        teamService.deleteTeam(1L);
+
+        // Assert
+        verify(teamRepository).findById(1L);
+        verify(teamRepository).delete(testTeam);
+    }
+
+    @Test
+    @DisplayName("Should throw exception when deleting non-existent team")
+    void testDeleteNonExistentTeam() {
+        // Arrange
+        when(teamRepository.findById(999L)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(ResourceNotFoundException.class, 
+            () -> teamService.deleteTeam(999L),
+            "Should throw exception when deleting non-existent team");
+        verify(teamRepository, never()).delete(any());
+    }
+
+    @Test
+    @DisplayName("Should update team details")
+    void testUpdateTeamDetails() {
+        // Arrange
+        when(teamRepository.findById(1L)).thenReturn(Optional.of(testTeam));
+        when(teamRepository.save(any(RescueTeam.class))).thenReturn(testTeam);
+
+        teamDto.setName("Fire Rescue Alpha - Updated");
+        teamDto.setMemberCount(7);
+
+        // Act
+        RescueTeam updated = teamService.updateTeam(1L, teamDto);
+
+        // Assert
+        assertEquals("Fire Rescue Alpha - Updated", updated.getName());
+        assertEquals(7, updated.getMemberCount());
+        verify(teamRepository).findById(1L);
+        verify(teamRepository).save(testTeam);
+    }
+
+    @Test
+    @DisplayName("Should count teams by status")
+    void testCountTeamsByStatus() {
+        // Arrange
+        when(teamRepository.countByStatus(TeamStatus.AVAILABLE)).thenReturn(2L);
+        when(teamRepository.countByStatus(TeamStatus.BUSY)).thenReturn(1L);
+        when(teamRepository.countByStatus(TeamStatus.EN_ROUTE)).thenReturn(1L);
+
+        // Act
+        long availableCount = teamService.countByStatus(TeamStatus.AVAILABLE);
+        long busyCount = teamService.countByStatus(TeamStatus.BUSY);
+        long enRouteCount = teamService.countByStatus(TeamStatus.EN_ROUTE);
+
+        // Assert
+        assertEquals(2, availableCount, "Should have 2 available teams");
+        assertEquals(1, busyCount, "Should have 1 busy team");
+        assertEquals(1, enRouteCount, "Should have 1 en route team");
+    }
+
+    @Test
+    @DisplayName("Should check if team is available")
+    void testIsTeamAvailable() {
+        // Arrange
+        when(teamRepository.findById(1L)).thenReturn(Optional.of(testTeam));
+
+        // Act
+        boolean isAvailable = teamService.isTeamAvailable(1L);
+
+        // Assert
+        assertTrue(isAvailable, "Team with AVAILABLE status should return true");
+    }
+
+    @Test
+    @DisplayName("Should check if team is busy")
+    void testIsTeamBusy() {
+        // Arrange
+        testTeam.setStatus(TeamStatus.BUSY);
+        when(teamRepository.findById(1L)).thenReturn(Optional.of(testTeam));
+
+        // Act
+        boolean isAvailable = teamService.isTeamAvailable(1L);
+
+        // Assert
+        assertFalse(isAvailable, "Team with BUSY status should return false");
+    }
+
+    @Test
+    @DisplayName("Should validate team member count")
+    void testValidateTeamMemberCount() {
+        // Arrange
+        teamDto.setMemberCount(0);
+
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class, 
+            () -> teamService.validateTeamDto(teamDto),
+            "Should throw exception for team with 0 members");
+    }
+
+    @Test
+    @DisplayName("Should validate team name is not empty")
+    void testValidateTeamNameNotEmpty() {
+        // Arrange
+        teamDto.setName("");
+
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class, 
+            () -> teamService.validateTeamDto(teamDto),
+            "Should throw exception for empty team name");
+    }
+
+    @Test
+    @DisplayName("Should get team utilization rate")
+    void testGetTeamUtilizationRate() {
+        // Arrange
+        when(teamRepository.count()).thenReturn(4L);
+        when(teamRepository.countByStatus(TeamStatus.AVAILABLE)).thenReturn(1L);
+
+        // Act
+        double utilizationRate = teamService.getTeamUtilizationRate();
+
+        // Assert
+        // Utilization = (4 - 1) / 4 = 0.75 = 75%
+        assertEquals(75.0, utilizationRate, 0.01, 
+            "Utilization rate should be 75% (3 busy out of 4 total)");
+    }
+
+    @Test
+    @DisplayName("Should handle zero teams for utilization rate")
+    void testGetTeamUtilizationRateWithZeroTeams() {
+        // Arrange
+        when(teamRepository.count()).thenReturn(0L);
+
+        // Act
+        double utilizationRate = teamService.getTeamUtilizationRate();
+
+        // Assert
+        assertEquals(0.0, utilizationRate, "Utilization rate should be 0% when no teams exist");
+    }
+
+    @Test
+    @DisplayName("Should assign team to emergency request")
+    void testAssignTeamToRequest() {
+        // Arrange
+        when(teamRepository.findById(1L)).thenReturn(Optional.of(testTeam));
+        when(teamRepository.save(any(RescueTeam.class))).thenReturn(testTeam);
+
+        // Act
+        RescueTeam assigned = teamService.assignTeamToRequest(1L);
+
+        // Assert
+        assertEquals(TeamStatus.ASSIGNED, assigned.getStatus(), 
+            "Team status should be ASSIGNED after assignment");
+        verify(teamRepository).save(testTeam);
+    }
+
+    @Test
+    @DisplayName("Should not assign busy team")
+    void testCannotAssignBusyTeam() {
+        // Arrange
+        testTeam.setStatus(TeamStatus.BUSY);
+        when(teamRepository.findById(1L)).thenReturn(Optional.of(testTeam));
+
+        // Act & Assert
+        assertThrows(IllegalStateException.class, 
+            () -> teamService.assignTeamToRequest(1L),
+            "Should throw exception when trying to assign busy team");
+    }
+
+    @Test
+    @DisplayName("Should release team after task completion")
+    void testReleaseTeam() {
+        // Arrange
+        testTeam.setStatus(TeamStatus.BUSY);
+        when(teamRepository.findById(1L)).thenReturn(Optional.of(testTeam));
+        when(teamRepository.save(any(RescueTeam.class))).thenReturn(testTeam);
+
+        // Act
+        RescueTeam released = teamService.releaseTeam(1L);
+
+        // Assert
+        assertEquals(TeamStatus.AVAILABLE, released.getStatus(), 
+            "Team should be AVAILABLE after release");
+        verify(teamRepository).save(testTeam);
+    }
+
+    @Test
+    @DisplayName("Should get teams sorted by availability")
+    void testGetTeamsSortedByAvailability() {
+        // Arrange
+        RescueTeam availableTeam = new RescueTeam();
+        availableTeam.setId(1L);
+        availableTeam.setName("Team A");
+        availableTeam.setStatus(TeamStatus.AVAILABLE);
+
+        RescueTeam busyTeam = new RescueTeam();
+        busyTeam.setId(2L);
+        busyTeam.setName("Team B");
+        busyTeam.setStatus(TeamStatus.BUSY);
+
+        when(teamRepository.findAll()).thenReturn(Arrays.asList(busyTeam, availableTeam));
+
+        // Act
+        List<RescueTeam> sortedTeams = teamService.getTeamsSortedByAvailability();
+
+        // Assert
+        assertEquals(2, sortedTeams.size());
+        assertEquals(TeamStatus.AVAILABLE, sortedTeams.get(0).getStatus(), 
+            "Available teams should be first");
+        assertEquals(TeamStatus.BUSY, sortedTeams.get(1).getStatus(), 
+            "Busy teams should be last");
+    }
+}

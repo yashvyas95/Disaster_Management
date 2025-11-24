@@ -1,0 +1,529 @@
+package com.disaster.service;
+
+import com.disaster.dto.DashboardStatsDto;
+import com.disaster.entity.*;
+import com.disaster.repository.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.time.LocalDateTime;
+import java.util.*;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+/**
+ * Comprehensive unit tests for DashboardService
+ * Tests dashboard statistics calculation, metrics aggregation, and business logic
+ */
+@ExtendWith(MockitoExtension.class)
+@DisplayName("Dashboard Service Tests")
+class DashboardServiceTest {
+
+    @Mock
+    private EmergencyRequestRepository requestRepository;
+
+    @Mock
+    private RescueTeamRepository teamRepository;
+
+    @Mock
+    private DepartmentRepository departmentRepository;
+
+    @Mock
+    private UserRepository userRepository;
+
+    @InjectMocks
+    private DashboardService dashboardService;
+
+    private List<EmergencyRequest> testRequests;
+    private List<RescueTeam> testTeams;
+    private List<Department> testDepartments;
+
+    @BeforeEach
+    void setUp() {
+        setupTestData();
+    }
+
+    /**
+     * Setup test data with realistic emergency scenarios
+     */
+    private void setupTestData() {
+        // Create test departments
+        Department fireDept = new Department();
+        fireDept.setId(1L);
+        fireDept.setName("Fire Department");
+
+        Department medicalDept = new Department();
+        medicalDept.setId(2L);
+        medicalDept.setName("Medical Emergency Services");
+
+        Department policeDept = new Department();
+        policeDept.setId(3L);
+        policeDept.setName("Police Department");
+
+        testDepartments = Arrays.asList(fireDept, medicalDept, policeDept);
+
+        // Create test rescue teams
+        RescueTeam fireTeam = createTeam(1L, "Fire Rescue Alpha", TeamStatus.AVAILABLE, fireDept, 5);
+        RescueTeam medicalTeam = createTeam(2L, "Medical Response Team 1", TeamStatus.BUSY, medicalDept, 4);
+        RescueTeam policeTeam = createTeam(3L, "Police Rapid Response", TeamStatus.EN_ROUTE, policeDept, 6);
+        RescueTeam fireTeam2 = createTeam(4L, "Fire Rescue Bravo", TeamStatus.AVAILABLE, fireDept, 5);
+
+        testTeams = Arrays.asList(fireTeam, medicalTeam, policeTeam, fireTeam2);
+
+        // Create test emergency requests with various statuses and priorities
+        testRequests = new ArrayList<>();
+        
+        // CRITICAL FIRE - PENDING
+        testRequests.add(createRequest(1L, "Building Fire", EmergencyType.FIRE, 
+            EmergencyPriority.CRITICAL, RequestStatus.PENDING, null, 
+            LocalDateTime.now().minusHours(2)));
+        
+        // HIGH MEDICAL - ASSIGNED
+        testRequests.add(createRequest(2L, "Heart Attack", EmergencyType.MEDICAL, 
+            EmergencyPriority.HIGH, RequestStatus.ASSIGNED, medicalTeam, 
+            LocalDateTime.now().minusHours(1)));
+        
+        // CRITICAL CRIME - EN_ROUTE
+        testRequests.add(createRequest(3L, "Active Shooter", EmergencyType.CRIME, 
+            EmergencyPriority.CRITICAL, RequestStatus.EN_ROUTE, policeTeam, 
+            LocalDateTime.now().minusMinutes(30)));
+        
+        // MEDIUM ACCIDENT - ON_SCENE
+        testRequests.add(createRequest(4L, "Car Accident", EmergencyType.ACCIDENT, 
+            EmergencyPriority.MEDIUM, RequestStatus.ON_SCENE, fireTeam, 
+            LocalDateTime.now().minusMinutes(15)));
+        
+        // LOW MEDICAL - RESOLVED
+        testRequests.add(createRequest(5L, "Minor Injury", EmergencyType.MEDICAL, 
+            EmergencyPriority.LOW, RequestStatus.RESOLVED, medicalTeam, 
+            LocalDateTime.now().minusDays(1)));
+        
+        // CRITICAL FIRE - PENDING (24 hours ago)
+        testRequests.add(createRequest(6L, "Factory Fire", EmergencyType.FIRE, 
+            EmergencyPriority.CRITICAL, RequestStatus.PENDING, null, 
+            LocalDateTime.now().minusHours(24)));
+    }
+
+    private RescueTeam createTeam(Long id, String name, TeamStatus status, Department dept, int memberCount) {
+        RescueTeam team = new RescueTeam();
+        team.setId(id);
+        team.setName(name);
+        team.setStatus(status);
+        team.setDepartment(dept);
+        team.setMemberCount(memberCount);
+        return team;
+    }
+
+    private EmergencyRequest createRequest(Long id, String description, EmergencyType type,
+                                          EmergencyPriority priority, RequestStatus status,
+                                          RescueTeam team, LocalDateTime createdAt) {
+        EmergencyRequest request = new EmergencyRequest();
+        request.setId(id);
+        request.setDescription(description);
+        request.setType(type);
+        request.setPriority(priority);
+        request.setStatus(status);
+        request.setAssignedTeam(team);
+        request.setCreatedAt(createdAt);
+        request.setVictimName("Test Victim " + id);
+        request.setPhoneNumber("555-000" + id);
+        request.setLocation("Test Location " + id);
+        request.setLatitude(37.7749);
+        request.setLongitude(-122.4194);
+        return request;
+    }
+
+    @Test
+    @DisplayName("Should calculate total requests correctly")
+    void testGetTotalRequests() {
+        // Arrange
+        when(requestRepository.count()).thenReturn(6L);
+
+        // Act
+        DashboardStatsDto stats = dashboardService.getDashboardStats();
+
+        // Assert
+        assertEquals(6, stats.getTotalRequests(), "Total requests should be 6");
+        verify(requestRepository, times(1)).count();
+    }
+
+    @Test
+    @DisplayName("Should count pending requests correctly")
+    void testGetPendingRequests() {
+        // Arrange
+        long expectedPending = testRequests.stream()
+            .filter(r -> r.getStatus() == RequestStatus.PENDING)
+            .count();
+        when(requestRepository.countByStatus(RequestStatus.PENDING)).thenReturn(expectedPending);
+
+        // Act
+        DashboardStatsDto stats = dashboardService.getDashboardStats();
+
+        // Assert
+        assertEquals(expectedPending, stats.getPendingRequests(), 
+            "Should count 2 pending requests");
+        verify(requestRepository).countByStatus(RequestStatus.PENDING);
+    }
+
+    @Test
+    @DisplayName("Should count active requests (ASSIGNED + EN_ROUTE + ON_SCENE)")
+    void testGetActiveRequests() {
+        // Arrange
+        when(requestRepository.countByStatusIn(Arrays.asList(
+            RequestStatus.ASSIGNED, RequestStatus.EN_ROUTE, RequestStatus.ON_SCENE)))
+            .thenReturn(3L);
+
+        // Act
+        DashboardStatsDto stats = dashboardService.getDashboardStats();
+
+        // Assert
+        assertEquals(3, stats.getActiveRequests(), 
+            "Should count 3 active requests (ASSIGNED + EN_ROUTE + ON_SCENE)");
+    }
+
+    @Test
+    @DisplayName("Should count resolved requests correctly")
+    void testGetResolvedRequests() {
+        // Arrange
+        when(requestRepository.countByStatus(RequestStatus.RESOLVED)).thenReturn(1L);
+
+        // Act
+        DashboardStatsDto stats = dashboardService.getDashboardStats();
+
+        // Assert
+        assertEquals(1, stats.getResolvedRequests(), "Should count 1 resolved request");
+    }
+
+    @Test
+    @DisplayName("Should calculate requests by status distribution")
+    void testGetRequestsByStatus() {
+        // Arrange
+        Map<RequestStatus, Long> expectedDistribution = new HashMap<>();
+        expectedDistribution.put(RequestStatus.PENDING, 2L);
+        expectedDistribution.put(RequestStatus.ASSIGNED, 1L);
+        expectedDistribution.put(RequestStatus.EN_ROUTE, 1L);
+        expectedDistribution.put(RequestStatus.ON_SCENE, 1L);
+        expectedDistribution.put(RequestStatus.RESOLVED, 1L);
+
+        when(requestRepository.countByStatus(RequestStatus.PENDING)).thenReturn(2L);
+        when(requestRepository.countByStatus(RequestStatus.ASSIGNED)).thenReturn(1L);
+        when(requestRepository.countByStatus(RequestStatus.EN_ROUTE)).thenReturn(1L);
+        when(requestRepository.countByStatus(RequestStatus.ON_SCENE)).thenReturn(1L);
+        when(requestRepository.countByStatus(RequestStatus.RESOLVED)).thenReturn(1L);
+
+        // Act
+        DashboardStatsDto stats = dashboardService.getDashboardStats();
+
+        // Assert
+        assertNotNull(stats.getRequestsByStatus(), "Requests by status should not be null");
+        assertEquals(2L, stats.getRequestsByStatus().get(RequestStatus.PENDING));
+        assertEquals(1L, stats.getRequestsByStatus().get(RequestStatus.RESOLVED));
+    }
+
+    @Test
+    @DisplayName("Should calculate requests by type distribution")
+    void testGetRequestsByType() {
+        // Arrange
+        when(requestRepository.countByType(EmergencyType.FIRE)).thenReturn(2L);
+        when(requestRepository.countByType(EmergencyType.MEDICAL)).thenReturn(2L);
+        when(requestRepository.countByType(EmergencyType.CRIME)).thenReturn(1L);
+        when(requestRepository.countByType(EmergencyType.ACCIDENT)).thenReturn(1L);
+
+        // Act
+        DashboardStatsDto stats = dashboardService.getDashboardStats();
+
+        // Assert
+        assertNotNull(stats.getRequestsByType(), "Requests by type should not be null");
+        assertEquals(2L, stats.getRequestsByType().get(EmergencyType.FIRE));
+        assertEquals(2L, stats.getRequestsByType().get(EmergencyType.MEDICAL));
+        assertEquals(1L, stats.getRequestsByType().get(EmergencyType.CRIME));
+        assertEquals(1L, stats.getRequestsByType().get(EmergencyType.ACCIDENT));
+    }
+
+    @Test
+    @DisplayName("Should calculate team availability correctly")
+    void testGetTeamAvailability() {
+        // Arrange
+        when(teamRepository.countByStatus(TeamStatus.AVAILABLE)).thenReturn(2L);
+        when(teamRepository.countByStatusIn(Arrays.asList(
+            TeamStatus.BUSY, TeamStatus.EN_ROUTE, TeamStatus.ON_SCENE)))
+            .thenReturn(2L);
+
+        // Act
+        DashboardStatsDto stats = dashboardService.getDashboardStats();
+
+        // Assert
+        assertEquals(2, stats.getAvailableTeams(), "Should count 2 available teams");
+        assertEquals(2, stats.getBusyTeams(), "Should count 2 busy teams");
+    }
+
+    @Test
+    @DisplayName("Should count total rescue teams")
+    void testGetTotalRescueTeams() {
+        // Arrange
+        when(teamRepository.count()).thenReturn(4L);
+
+        // Act
+        DashboardStatsDto stats = dashboardService.getDashboardStats();
+
+        // Assert
+        assertEquals(4, stats.getTotalRescueTeams(), "Should count 4 total teams");
+    }
+
+    @Test
+    @DisplayName("Should count total departments")
+    void testGetTotalDepartments() {
+        // Arrange
+        when(departmentRepository.count()).thenReturn(3L);
+
+        // Act
+        DashboardStatsDto stats = dashboardService.getDashboardStats();
+
+        // Assert
+        assertEquals(3, stats.getTotalDepartments(), "Should count 3 departments");
+    }
+
+    @Test
+    @DisplayName("Should calculate requests in last 24 hours")
+    void testGetRequestsLast24Hours() {
+        // Arrange
+        LocalDateTime oneDayAgo = LocalDateTime.now().minusDays(1);
+        when(requestRepository.countByCreatedAtAfter(any(LocalDateTime.class))).thenReturn(5L);
+
+        // Act
+        DashboardStatsDto stats = dashboardService.getDashboardStats();
+
+        // Assert
+        assertEquals(5, stats.getRequestsLast24Hours(), 
+            "Should count 5 requests in last 24 hours");
+    }
+
+    @Test
+    @DisplayName("Should calculate requests in last 7 days")
+    void testGetRequestsLast7Days() {
+        // Arrange
+        when(requestRepository.countByCreatedAtAfter(any(LocalDateTime.class))).thenReturn(6L);
+
+        // Act
+        DashboardStatsDto stats = dashboardService.getDashboardStats();
+
+        // Assert
+        assertEquals(6, stats.getRequestsLast7Days(), 
+            "Should count all 6 requests in last 7 days");
+    }
+
+    @Test
+    @DisplayName("Should calculate average response time in minutes")
+    void testAverageResponseTime() {
+        // Arrange
+        // Mock average response time: 10 minutes (600 seconds)
+        when(requestRepository.calculateAverageResponseTime()).thenReturn(600.0);
+
+        // Act
+        DashboardStatsDto stats = dashboardService.getDashboardStats();
+
+        // Assert
+        assertEquals(600.0, stats.getAverageResponseTime(), 
+            "Average response time should be 600 seconds (10 minutes)");
+    }
+
+    @Test
+    @DisplayName("Should calculate resolution rate percentage")
+    void testResolutionRate() {
+        // Arrange
+        when(requestRepository.count()).thenReturn(6L);
+        when(requestRepository.countByStatus(RequestStatus.RESOLVED)).thenReturn(1L);
+
+        // Act
+        DashboardStatsDto stats = dashboardService.getDashboardStats();
+
+        // Assert
+        // Resolution rate = (1 / 6) * 100 = 16.67%
+        assertEquals(16.67, stats.getResolutionRate(), 0.01, 
+            "Resolution rate should be approximately 16.67%");
+    }
+
+    @Test
+    @DisplayName("Should handle zero requests for resolution rate")
+    void testResolutionRateWithZeroRequests() {
+        // Arrange
+        when(requestRepository.count()).thenReturn(0L);
+        when(requestRepository.countByStatus(RequestStatus.RESOLVED)).thenReturn(0L);
+
+        // Act
+        DashboardStatsDto stats = dashboardService.getDashboardStats();
+
+        // Assert
+        assertEquals(0.0, stats.getResolutionRate(), 
+            "Resolution rate should be 0% when no requests exist");
+    }
+
+    @Test
+    @DisplayName("Should count critical priority requests")
+    void testGetCriticalRequests() {
+        // Arrange
+        when(requestRepository.countByPriority(EmergencyPriority.CRITICAL)).thenReturn(3L);
+
+        // Act
+        DashboardStatsDto stats = dashboardService.getDashboardStats();
+
+        // Assert
+        assertEquals(3, stats.getCriticalRequests(), 
+            "Should count 3 critical priority requests");
+    }
+
+    @Test
+    @DisplayName("Should count high priority requests")
+    void testGetHighPriorityRequests() {
+        // Arrange
+        when(requestRepository.countByPriority(EmergencyPriority.HIGH)).thenReturn(1L);
+
+        // Act
+        DashboardStatsDto stats = dashboardService.getDashboardStats();
+
+        // Assert
+        assertEquals(1, stats.getHighPriorityRequests(), 
+            "Should count 1 high priority request");
+    }
+
+    @Test
+    @DisplayName("Should calculate requests by department")
+    void testGetRequestsByDepartment() {
+        // Arrange
+        Map<String, Long> expectedByDept = new HashMap<>();
+        expectedByDept.put("Fire Department", 2L);
+        expectedByDept.put("Medical Emergency Services", 2L);
+        expectedByDept.put("Police Department", 1L);
+
+        when(requestRepository.countByDepartment()).thenReturn(expectedByDept);
+
+        // Act
+        DashboardStatsDto stats = dashboardService.getDashboardStats();
+
+        // Assert
+        assertNotNull(stats.getRequestsByDepartment());
+        assertEquals(2L, stats.getRequestsByDepartment().get("Fire Department"));
+        assertEquals(2L, stats.getRequestsByDepartment().get("Medical Emergency Services"));
+        assertEquals(1L, stats.getRequestsByDepartment().get("Police Department"));
+    }
+
+    @Test
+    @DisplayName("Should handle empty database gracefully")
+    void testGetStatsWithEmptyDatabase() {
+        // Arrange
+        when(requestRepository.count()).thenReturn(0L);
+        when(requestRepository.countByStatus(any())).thenReturn(0L);
+        when(requestRepository.countByType(any())).thenReturn(0L);
+        when(requestRepository.countByPriority(any())).thenReturn(0L);
+        when(teamRepository.count()).thenReturn(0L);
+        when(departmentRepository.count()).thenReturn(0L);
+
+        // Act
+        DashboardStatsDto stats = dashboardService.getDashboardStats();
+
+        // Assert
+        assertNotNull(stats, "Stats should not be null even with empty database");
+        assertEquals(0, stats.getTotalRequests());
+        assertEquals(0, stats.getPendingRequests());
+        assertEquals(0, stats.getActiveRequests());
+        assertEquals(0, stats.getResolvedRequests());
+        assertEquals(0.0, stats.getResolutionRate());
+    }
+
+    @Test
+    @DisplayName("Should handle null values from repository")
+    void testGetStatsWithNullValues() {
+        // Arrange
+        when(requestRepository.count()).thenReturn(null);
+        when(teamRepository.count()).thenReturn(null);
+        when(departmentRepository.count()).thenReturn(null);
+
+        // Act & Assert
+        assertDoesNotThrow(() -> dashboardService.getDashboardStats(),
+            "Service should handle null values gracefully");
+    }
+
+    @Test
+    @DisplayName("Should verify all repository methods are called")
+    void testAllRepositoryMethodsCalled() {
+        // Arrange
+        when(requestRepository.count()).thenReturn(6L);
+        when(requestRepository.countByStatus(any())).thenReturn(0L);
+        when(requestRepository.countByStatusIn(any())).thenReturn(0L);
+        when(requestRepository.countByType(any())).thenReturn(0L);
+        when(requestRepository.countByPriority(any())).thenReturn(0L);
+        when(requestRepository.countByCreatedAtAfter(any())).thenReturn(0L);
+        when(teamRepository.count()).thenReturn(4L);
+        when(teamRepository.countByStatus(any())).thenReturn(0L);
+        when(teamRepository.countByStatusIn(any())).thenReturn(0L);
+        when(departmentRepository.count()).thenReturn(3L);
+
+        // Act
+        DashboardStatsDto stats = dashboardService.getDashboardStats();
+
+        // Assert
+        verify(requestRepository, atLeastOnce()).count();
+        verify(requestRepository, atLeastOnce()).countByStatus(any());
+        verify(requestRepository, atLeastOnce()).countByType(any());
+        verify(requestRepository, atLeastOnce()).countByPriority(any());
+        verify(teamRepository, atLeastOnce()).count();
+        verify(departmentRepository, atLeastOnce()).count();
+    }
+
+    @Test
+    @DisplayName("Should calculate statistics for department dashboard")
+    void testGetDepartmentDashboardStats() {
+        // Arrange
+        Long departmentId = 1L;
+        when(requestRepository.countByDepartmentId(departmentId)).thenReturn(2L);
+        when(requestRepository.countByDepartmentIdAndStatus(departmentId, RequestStatus.PENDING))
+            .thenReturn(1L);
+        when(requestRepository.countByDepartmentIdAndStatus(departmentId, RequestStatus.RESOLVED))
+            .thenReturn(1L);
+        when(teamRepository.countByDepartmentId(departmentId)).thenReturn(2L);
+        when(teamRepository.countByDepartmentIdAndStatus(departmentId, TeamStatus.AVAILABLE))
+            .thenReturn(1L);
+
+        // Act
+        DashboardStatsDto stats = dashboardService.getDepartmentDashboardStats(departmentId);
+
+        // Assert
+        assertNotNull(stats, "Department stats should not be null");
+        assertEquals(2, stats.getTotalRequests(), "Department should have 2 requests");
+        verify(requestRepository).countByDepartmentId(departmentId);
+        verify(teamRepository).countByDepartmentId(departmentId);
+    }
+
+    @Test
+    @DisplayName("Should validate dashboard DTO fields are populated")
+    void testDashboardDtoPopulation() {
+        // Arrange
+        when(requestRepository.count()).thenReturn(10L);
+        when(requestRepository.countByStatus(RequestStatus.PENDING)).thenReturn(3L);
+        when(requestRepository.countByStatus(RequestStatus.RESOLVED)).thenReturn(2L);
+        when(requestRepository.countByStatusIn(any())).thenReturn(5L);
+        when(teamRepository.count()).thenReturn(5L);
+        when(departmentRepository.count()).thenReturn(3L);
+
+        // Act
+        DashboardStatsDto stats = dashboardService.getDashboardStats();
+
+        // Assert
+        assertAll("Dashboard DTO should have all fields populated",
+            () -> assertNotNull(stats.getTotalRequests()),
+            () -> assertNotNull(stats.getPendingRequests()),
+            () -> assertNotNull(stats.getActiveRequests()),
+            () -> assertNotNull(stats.getResolvedRequests()),
+            () -> assertNotNull(stats.getTotalRescueTeams()),
+            () -> assertNotNull(stats.getTotalDepartments()),
+            () -> assertNotNull(stats.getRequestsByStatus()),
+            () -> assertNotNull(stats.getRequestsByType())
+        );
+    }
+}

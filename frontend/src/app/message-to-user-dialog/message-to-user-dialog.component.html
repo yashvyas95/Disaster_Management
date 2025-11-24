@@ -1,0 +1,28 @@
+
+  <div class="inbox_chat">
+      <p>Message Sent</p>
+    <div class="channels" *ngFor="let com of coms">
+            {{com}}
+    </div>
+  </div>
+<form [formGroup]="messageToUserForm" (ngSubmit)="sendMessage()">
+    <div class="form-group row">
+        <label for="Message" class="col-md-4 col-form-label text-md-right">Message</label>
+        <div class="col-md-10">
+            <input type="text" id="message" class="form-control" [formControlName]="'message'" name="user_name" required
+                autofocus>
+                                            
+        </div>
+    </div>
+
+    <span class="col-md-6 offset-md-4">
+        <button type="submit" class="login">
+            Send Message
+        </button>
+     
+    </span>   
+    <span class="col-md-6 offset-md-4">
+       <button class="login" (click)="close()">close</button>
+    </span>   
+                    
+</form>

@@ -1,0 +1,36 @@
+<h4 mat-dialog-title class="EmployeeInfoDialog" layout-align="center">All user</h4>
+<button class="btnCreateSubreddit" (click)="close()">Close</button>
+<mat-dialog-content>
+    <table mat-table [dataSource]="Alluser">
+        <!--displayedColumns: string[] = ['Id','request_id' ,'location', 'Emp1', 'Emp2','Emp3','status','action'];-->
+        <!-- Position Column -->
+        <ng-container matColumnDef="Id">
+          <th mat-header-cell *matHeaderCellDef> Id. </th>
+          <td mat-cell *matCellDef="let element"> {{element.userId}} </td>
+        </ng-container>
+      
+        <!-- Name Column -->
+        <ng-container matColumnDef="fullName">
+          <th mat-header-cell *matHeaderCellDef> username </th>
+          <td mat-cell *matCellDef="let element"> {{element.username}} </td>
+        </ng-container>
+      
+        <!-- Weight Column -->
+        <ng-container matColumnDef="rescueTeamID">
+          <th mat-header-cell *matHeaderCellDef> rescueTeamId </th>
+          <td mat-cell *matCellDef="let element"> {{element.rescueTeamId}} </td>
+        </ng-container>
+    
+
+        <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef> Action </th>
+            <td mat-cell *matCellDef="let element"> <button class="btnCreateSubreddit" (click)="messageToUserDialog(element.userId)" >Message</button> </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      
+        <!-- Row shown when there is no matching data. -->
+    
+      </table>
+</mat-dialog-content>

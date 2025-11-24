@@ -1,0 +1,387 @@
+<div class="container-fluid py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0"><i class="fas fa-tachometer-alt"></i> Admin Dashboard</h2>
+    <app-unified-messaging></app-unified-messaging>
+  </div>
+
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+  <div *ngIf="!loading && stats">
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+      <div class="col-md-3 col-sm-6 mb-3">
+        <div class="card bg-primary text-white">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="card-title">Total Requests</h6>
+                <h2 class="mb-0">{{ stats.totalRequests }}</h2>
+              </div>
+              <i class="fas fa-exclamation-circle fa-3x opacity-50"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3 col-sm-6 mb-3">
+        <div class="card bg-warning text-white">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="card-title">Pending</h6>
+                <h2 class="mb-0">{{ stats.pendingRequests }}</h2>
+              </div>
+              <i class="fas fa-clock fa-3x opacity-50"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3 col-sm-6 mb-3">
+        <div class="card bg-info text-white">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="card-title">Active</h6>
+                <h2 class="mb-0">{{ stats.activeRequests }}</h2>
+              </div>
+              <i class="fas fa-sync fa-3x opacity-50"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3 col-sm-6 mb-3">
+        <div class="card bg-success text-white">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="card-title">Resolved</h6>
+                <h2 class="mb-0">{{ stats.resolvedRequests }}</h2>
+              </div>
+              <i class="fas fa-check-circle fa-3x opacity-50"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="row mb-4">
+      <div class="col-md-4 mb-3">
+        <div class="card">
+          <div class="card-body" style="height: 300px;">
+            <canvas id="statusChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 mb-3">
+        <div class="card">
+          <div class="card-body" style="height: 300px;">
+            <canvas id="priorityChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 mb-3">
+        <div class="card">
+          <div class="card-body" style="height: 300px; display: flex; align-items: center; justify-content: center;">
+            <canvas id="teamChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- All Emergency Requests -->
+    <div class="card">
+      <div class="card-header">
+        <h5 class="mb-0"><i class="fas fa-list-alt"></i> Emergency Requests ({{ allRequests.length }})</h5>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-striped table-hover">
+            <thead class="table-dark">
+              <tr>
+                <th>ID</th>
+                <th>Victim</th>
+                <th>Location</th>
+                <th>Type</th>
+                <th>Priority</th>
+                <th>Status</th>
+                <th>Assigned Team</th>
+                <th>Created</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let request of allRequests"
+                  [class.table-danger]="request.priority === 'CRITICAL'"
+                  [class.table-warning]="request.priority === 'HIGH'">
+                <td><strong>#{{ request.id }}</strong></td>
+                <td>
+                  {{ request.victimName }}
+                  <br *ngIf="request.victimPhone">
+                  <small class="text-muted" *ngIf="request.victimPhone">{{ request.victimPhone }}</small>
+                </td>
+                <td>
+                  <i class="fas fa-map-marker-alt text-danger"></i> {{ request.location }}
+                </td>
+                <td><span class="badge badge-info">{{ request.emergencyType }}</span></td>
+                <td><span class="badge" [ngClass]="getPriorityBadgeClass(request.priority)">{{ request.priority }}</span></td>
+                <td><span class="badge" [ngClass]="getStatusBadgeClass(request.status)">{{ request.status }}</span></td>
+                <td>
+                  <span *ngIf="request.assignedTeam" class="badge badge-success">{{ request.assignedTeam.name }}</span>
+                  <span *ngIf="!request.assignedTeam" class="badge badge-secondary">Unassigned</span>
+                </td>
+                <td><small>{{ request.createdAt | date:'short' }}</small></td>
+                <td>
+                  <button class="btn btn-primary btn-sm"
+                          (click)="openActionDialog(request)"
+                          *ngIf="request.status !== 'RESOLVED' && request.status !== 'CANCELLED'"
+                          title="Manage Request">
+                    <i class="fas fa-cog"></i> Manage
+                  </button>
+
+                  <span *ngIf="request.status === 'RESOLVED'" class="badge badge-success">
+                    <i class="fas fa-check"></i> Completed
+                  </span>
+                  <span *ngIf="request.status === 'CANCELLED'" class="badge badge-secondary">
+                    <i class="fas fa-ban"></i> Cancelled
+                  </span>
+                </td>
+              </tr>
+              <tr *ngIf="allRequests.length === 0">
+                <td colspan="9" class="text-center text-muted py-4">No requests found</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Request Action Dialog -->
+<div class="modal" [class.show]="showActionDialog" [style.display]="showActionDialog ? 'block' : 'none'">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title"><i class="fas fa-cog"></i> Manage Emergency Request</h5>
+        <button type="button" class="close text-white" (click)="closeActionDialog()">
+          <span>&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" *ngIf="selectedRequest">
+        <!-- Request Details -->
+        <div class="card mb-3">
+          <div class="card-header bg-light">
+            <h6 class="mb-0"><i class="fas fa-info-circle"></i> Request Details</h6>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-4">
+                <p><strong>Request ID:</strong> #{{ selectedRequest.id }}</p>
+                <p><strong>Victim:</strong> {{ selectedRequest.victimName }}</p>
+                <p><strong>Phone:</strong> {{ selectedRequest.victimPhone || 'N/A' }}</p>
+              </div>
+              <div class="col-md-4">
+                <p><strong>Location:</strong> {{ selectedRequest.location }}</p>
+                <p><strong>Emergency Type:</strong> <span class="badge badge-info">{{ selectedRequest.emergencyType }}</span></p>
+                <p><strong>Priority:</strong> <span class="badge" [ngClass]="getPriorityBadgeClass(selectedRequest.priority)">{{ selectedRequest.priority }}</span></p>
+              </div>
+              <div class="col-md-4">
+                <p><strong>Current Status:</strong> <span class="badge" [ngClass]="getStatusBadgeClass(selectedRequest.status)">{{ selectedRequest.status }}</span></p>
+                <p><strong>Assigned Team:</strong>
+                  <span *ngIf="selectedRequest.assignedTeam" class="badge badge-success">{{ selectedRequest.assignedTeam.name }}</span>
+                  <span *ngIf="!selectedRequest.assignedTeam" class="badge badge-secondary">Unassigned</span>
+                </p>
+                <p><strong>Created:</strong> {{ selectedRequest.createdAt | date:'short' }}</p>
+              </div>
+            </div>
+            <div class="row" *ngIf="selectedRequest.description">
+              <div class="col-12">
+                <p><strong>Description:</strong></p>
+                <p class="text-muted">{{ selectedRequest.description }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link" [class.active]="activeTab === 'status'" (click)="activeTab = 'status'" role="tab">
+              <i class="fas fa-sync-alt"></i> Update Status
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" [class.active]="activeTab === 'assign'" (click)="activeTab = 'assign'" role="tab">
+              <i class="fas fa-user-plus"></i> Assign Team
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" [class.active]="activeTab === 'complete'" (click)="activeTab = 'complete'" role="tab">
+              <i class="fas fa-check-circle"></i> Complete/Cancel
+            </a>
+          </li>
+        </ul>
+
+        <div class="tab-content p-3 border border-top-0">
+          <!-- Status Update Tab -->
+          <div *ngIf="activeTab === 'status'">
+            <h6 class="mb-3">Change Request Status</h6>
+            <div class="row">
+              <div class="col-md-6" *ngIf="selectedRequest.status === 'PENDING' && selectedRequest.assignedTeam">
+                <div class="card mb-2 border-primary cursor-pointer" (click)="updateRequestStatus(selectedRequest.id, 'ASSIGNED')">
+                  <div class="card-body text-center">
+                    <i class="fas fa-check fa-2x text-primary mb-2"></i>
+                    <h6>Mark as Assigned</h6>
+                    <small class="text-muted">Team has been notified</small>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6" *ngIf="selectedRequest.status === 'ASSIGNED'">
+                <div class="card mb-2 border-info cursor-pointer" (click)="updateRequestStatus(selectedRequest.id, 'EN_ROUTE')">
+                  <div class="card-body text-center">
+                    <i class="fas fa-truck fa-2x text-info mb-2"></i>
+                    <h6>Mark as En Route</h6>
+                    <small class="text-muted">Team is on the way</small>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6" *ngIf="selectedRequest.status === 'EN_ROUTE'">
+                <div class="card mb-2 border-warning cursor-pointer" (click)="updateRequestStatus(selectedRequest.id, 'ON_SCENE')">
+                  <div class="card-body text-center">
+                    <i class="fas fa-map-marker-alt fa-2x text-warning mb-2"></i>
+                    <h6>Mark as On Scene</h6>
+                    <small class="text-muted">Team has arrived</small>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6" *ngIf="selectedRequest.status === 'ON_SCENE'">
+                <div class="card mb-2 border-success cursor-pointer" (click)="updateRequestStatus(selectedRequest.id, 'RESOLVED')">
+                  <div class="card-body text-center">
+                    <i class="fas fa-check-circle fa-2x text-success mb-2"></i>
+                    <h6>Mark as Resolved</h6>
+                    <small class="text-muted">Emergency handled</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="!canUpdateStatus()" class="alert alert-info">
+              <i class="fas fa-info-circle"></i>
+              <span *ngIf="!selectedRequest.assignedTeam">Please assign a team first before updating status.</span>
+              <span *ngIf="selectedRequest.assignedTeam && selectedRequest.status === 'PENDING'">Status will be automatically updated to ASSIGNED after team assignment.</span>
+            </div>
+          </div>
+
+          <!-- Team Assignment Tab -->
+          <div *ngIf="activeTab === 'assign'">
+            <h6 class="mb-3">Assign Rescue Team</h6>
+            <div *ngIf="selectedRequest.assignedTeam" class="alert alert-warning">
+              <i class="fas fa-exclamation-triangle"></i> This request is already assigned to <strong>{{ selectedRequest.assignedTeam.name }}</strong>. Reassigning will notify the new team.
+            </div>
+            <div class="row">
+              <div class="col-md-6" *ngFor="let team of allTeams">
+                <div class="card mb-2 cursor-pointer"
+                     [class.border-success]="team.status === 'AVAILABLE'"
+                     [class.border-secondary]="team.status !== 'AVAILABLE'"
+                     (click)="assignTeamToRequest(team.id)">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                      <div>
+                        <h6 class="mb-1">{{ team.name }}</h6>
+                        <p class="mb-1 text-muted"><small><i class="fas fa-building"></i> {{ team.department?.name }}</small></p>
+                        <p class="mb-1 text-muted"><small><i class="fas fa-users"></i> {{ team.memberCount }} members</small></p>
+                        <p class="mb-0 text-muted" *ngIf="team.capabilities"><small><i class="fas fa-tools"></i> {{ team.capabilities }}</small></p>
+                      </div>
+                      <span class="badge badge-lg"
+                            [class.badge-success]="team.status === 'AVAILABLE'"
+                            [class.badge-warning]="team.status === 'BUSY'"
+                            [class.badge-secondary]="team.status === 'OFF_DUTY'">
+                        {{ team.status }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="allTeams.length === 0" class="alert alert-warning">
+              <i class="fas fa-exclamation-triangle"></i> No rescue teams available at this time.
+            </div>
+          </div>
+
+          <!-- Complete/Cancel Tab -->
+          <div *ngIf="activeTab === 'complete'">
+            <h6 class="mb-3">Complete or Cancel Request</h6>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="card border-success">
+                  <div class="card-body">
+                    <h6><i class="fas fa-check-circle text-success"></i> Complete Request</h6>
+                    <p class="text-muted">Mark this emergency as successfully resolved.</p>
+                    <div class="form-group">
+                      <label for="resolutionNotes">Resolution Notes:</label>
+                      <textarea class="form-control" id="resolutionNotes" rows="3"
+                                [(ngModel)]="resolutionNotes"
+                                placeholder="Enter details about how the emergency was resolved..."></textarea>
+                    </div>
+                    <button class="btn btn-success btn-block"
+                            (click)="completeRequestWithNotes()"
+                            [disabled]="selectedRequest.status === 'RESOLVED' || selectedRequest.status === 'CANCELLED' || selectedRequest.status === 'PENDING'">
+                      <i class="fas fa-check-double"></i> Complete Request
+                    </button>
+                    <small class="text-muted" *ngIf="selectedRequest.status === 'PENDING'">
+                      <i class="fas fa-info-circle"></i> Assign a team before completing
+                    </small>
+                    <small class="text-success" *ngIf="selectedRequest.status === 'ASSIGNED' || selectedRequest.status === 'EN_ROUTE' || selectedRequest.status === 'ON_SCENE'">
+                      <i class="fas fa-check"></i> Ready to complete
+                    </small>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="card border-danger">
+                  <div class="card-body">
+                    <h6><i class="fas fa-times-circle text-danger"></i> Cancel Request</h6>
+                    <p class="text-muted">Cancel this emergency request (cannot be undone).</p>
+                    <div class="form-group">
+                      <label for="cancellationReason">Cancellation Reason:</label>
+                      <textarea class="form-control" id="cancellationReason" rows="3"
+                                [(ngModel)]="cancellationReason"
+                                placeholder="Enter reason for cancellation..."></textarea>
+                    </div>
+                    <button class="btn btn-danger btn-block"
+                            (click)="cancelRequestWithReason()"
+                            [disabled]="selectedRequest.status === 'RESOLVED' || selectedRequest.status === 'CANCELLED'">
+                      <i class="fas fa-ban"></i> Cancel Request
+                    </button>
+                    <small class="text-muted" *ngIf="selectedRequest.status === 'RESOLVED' || selectedRequest.status === 'CANCELLED'">
+                      <i class="fas fa-lock"></i> Cannot cancel a {{ selectedRequest.status.toLowerCase() }} request
+                    </small>
+                    <small class="text-warning" *ngIf="selectedRequest.status !== 'RESOLVED' && selectedRequest.status !== 'CANCELLED'">
+                      <i class="fas fa-exclamation-triangle"></i> This action cannot be undone
+                    </small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeActionDialog()">
+          <i class="fas fa-times"></i> Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop fade" [class.show]="showActionDialog" [style.display]="showActionDialog ? 'block' : 'none'" *ngIf="showActionDialog"></div>

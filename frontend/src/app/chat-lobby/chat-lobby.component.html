@@ -1,0 +1,113 @@
+<link
+  rel="stylesheet"
+  href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+  integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+  crossorigin="anonymous"
+/>
+<link
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"
+  type="text/css"
+  rel="stylesheet"
+/>
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+    <script src="../chat-lobby/websocket.js"></script>
+<div class="container">
+    <h3 class=" text-center">Messaging</h3>
+    <button class="btnCreateSubreddit" (click)="close()">Close</button>
+    <div class="messaging">
+      <div class="inbox_msg">
+        <div class="inbox_people">
+          <div class="headind_srch">
+            <div class="channel_heading">
+              <h4>Team Members</h4>
+            </div>
+          </div>
+
+          <!-- Department Selector for Admin -->
+          <div *ngIf="isAdmin && departments.length > 0" class="department-selector">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Select Department</mat-label>
+              <mat-select [(value)]="selectedDepartmentId" (selectionChange)="onDepartmentChange($event.value)">
+                <mat-option *ngFor="let dept of departments" [value]="dept.id">
+                  {{dept.name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="inbox_chat">
+            <div class="channels" *ngFor="let member of channelList">
+              <div class="chat_list" [class.active]="member.isCurrentUser">
+                <div class="chat_people">
+                  <div class="chat_img">
+                    <img src="https://www.redditstatic.com/avatars/avatar_default_08_D4E815.png" alt="member">
+                  </div>
+                  <div class="chat_ib">
+                    <h5>{{member.username || member.name}}</h5>
+                    <p>
+                      <span class="badge" [ngClass]="{
+                        'badge-success': member.status === 'AVAILABLE',
+                        'badge-warning': member.status === 'ASSIGNED',
+                        'badge-info': member.status === 'EN_ROUTE' || member.status === 'ON_SCENE',
+                        'badge-secondary': member.status === 'OFF_DUTY'
+                      }">{{member.status}}</span>
+                      <span *ngIf="member.location"> - {{member.location}}</span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="channelList.length === 0" class="no-members">
+              <mat-icon style="font-size: 48px; width: 48px; height: 48px; color: #999;">group_off</mat-icon>
+              <p><strong>No team members available</strong></p>
+              <p class="text-muted" *ngIf="!isAdmin">Please assign yourself to a department or rescue team to start chatting.</p>
+              <p class="text-muted" *ngIf="isAdmin">
+                <span *ngIf="departments.length === 0">No departments found. Please create departments first.</span>
+                <span *ngIf="departments.length > 0">No rescue teams found in this department. Create teams to see them here.</span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mesgs" >
+          <div class="msg_history">
+            <li class="message" *ngFor="let message of messages">
+              <div class="received_msg">
+                <div class="received_withd_msg">
+                   <p>
+                    {{message.content}}
+                   </p>
+
+                </div>
+              </div>
+            </li>
+              <div class="outgoing_msg"  *ngFor="let sentMessage of sentMessages">
+                  <div class="sent_msg">
+                     <p>
+                      {{sentMessage.content}}
+                     </p>
+
+
+                  </div>
+              </div>
+          </div>
+          <div class="type_msg">
+            <form class="input_msg_write" [formGroup]="chatform" (ngSubmit)="sendMessage()">
+              <input
+                type="text"
+                class="write_msg"
+                placeholder="Type a message"
+                name="newMessage"
+                [formControlName]="'messageInput'"
+                required
+              />
+              <button class="msg_send_btn" type="submit">
+                <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>

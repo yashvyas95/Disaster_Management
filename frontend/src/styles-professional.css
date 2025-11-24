@@ -1,0 +1,348 @@
+/* Professional & Calm Color Scheme for Disaster Management System */
+
+/* Override Bootstrap primary colors with professional palette */
+:root {
+  /* Primary Professional Blues */
+  --primary-blue: #2c5f8d;
+  --primary-blue-light: #4a7ba7;
+  --primary-blue-dark: #1e4159;
+
+  /* Secondary Grays */
+  --gray-100: #f8f9fa;
+  --gray-200: #e9ecef;
+  --gray-300: #dee2e6;
+  --gray-400: #ced4da;
+  --gray-500: #adb5bd;
+  --gray-600: #6c757d;
+  --gray-700: #495057;
+  --gray-800: #343a40;
+  --gray-900: #212529;
+
+  /* Status Colors - Muted and Professional */
+  --status-pending: #f0ad4e;
+  --status-active: #5bc0de;
+  --status-success: #5cb85c;
+  --status-danger: #d9534f;
+  --status-info: #5bc0de;
+
+  /* Priority Colors - Calm but Distinguishable */
+  --priority-critical: #c9302c;
+  --priority-high: #ec971f;
+  --priority-medium: #5bc0de;
+  --priority-low: #449d44;
+
+  /* Backgrounds */
+  --bg-light: #f5f7fa;
+  --bg-white: #ffffff;
+  --bg-card: #ffffff;
+
+  /* Text */
+  --text-primary: #2c3e50;
+  --text-secondary: #7f8c8d;
+  --text-muted: #95a5a6;
+}
+
+/* Card Styling - Professional and Clean */
+.card {
+  border: 1px solid var(--gray-300);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  background-color: var(--bg-light);
+  border-bottom: 2px solid var(--primary-blue);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Statistics Cards - Muted Colors */
+.card.bg-primary {
+  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-light) 100%) !important;
+  border: none;
+}
+
+.card.bg-warning {
+  background: linear-gradient(135deg, #d4a859 0%, #e6bc72 100%) !important;
+  border: none;
+  color: #ffffff !important;
+}
+
+.card.bg-info {
+  background: linear-gradient(135deg, #6ba3c4 0%, #7fb9d6 100%) !important;
+  border: none;
+}
+
+.card.bg-success {
+  background: linear-gradient(135deg, #5a9f7b 0%, #6fb38e 100%) !important;
+  border: none;
+}
+
+.card.bg-danger {
+  background: linear-gradient(135deg, #c9504d 0%, #d46763 100%) !important;
+  border: none;
+}
+
+.card.bg-secondary {
+  background: linear-gradient(135deg, var(--gray-600) 0%, var(--gray-500) 100%) !important;
+  border: none;
+}
+
+/* Badge Colors - Professional and Subtle */
+.badge {
+  font-weight: 500;
+  padding: 0.4em 0.8em;
+  border-radius: 4px;
+}
+
+.badge-primary {
+  background-color: var(--primary-blue);
+  color: #ffffff;
+}
+
+.badge-warning {
+  background-color: var(--status-pending);
+  color: #ffffff;
+}
+
+.badge-info {
+  background-color: #6ba3c4;
+  color: #ffffff;
+}
+
+.badge-success {
+  background-color: var(--status-success);
+  color: #ffffff;
+}
+
+.badge-danger {
+  background-color: var(--priority-critical);
+  color: #ffffff;
+}
+
+.badge-secondary {
+  background-color: var(--gray-600);
+  color: #ffffff;
+}
+
+/* Button Styling - Professional */
+.btn {
+  border-radius: 4px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background-color: var(--primary-blue);
+  border-color: var(--primary-blue);
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-blue-dark);
+  border-color: var(--primary-blue-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(44, 95, 141, 0.3);
+}
+
+.btn-success {
+  background-color: #5a9f7b;
+  border-color: #5a9f7b;
+}
+
+.btn-success:hover {
+  background-color: #4a8f6b;
+  border-color: #4a8f6b;
+  transform: translateY(-1px);
+}
+
+.btn-warning {
+  background-color: #d4a859;
+  border-color: #d4a859;
+  color: #ffffff;
+}
+
+.btn-warning:hover {
+  background-color: #c49849;
+  border-color: #c49849;
+  transform: translateY(-1px);
+}
+
+.btn-info {
+  background-color: #6ba3c4;
+  border-color: #6ba3c4;
+  color: #ffffff;
+}
+
+.btn-info:hover {
+  background-color: #5b93b4;
+  border-color: #5b93b4;
+  transform: translateY(-1px);
+}
+
+.btn-danger {
+  background-color: #c9504d;
+  border-color: #c9504d;
+}
+
+.btn-danger:hover {
+  background-color: #b9403d;
+  border-color: #b9403d;
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background-color: var(--gray-600);
+  border-color: var(--gray-600);
+}
+
+.btn-secondary:hover {
+  background-color: var(--gray-700);
+  border-color: var(--gray-700);
+}
+
+/* Table Styling - Clean and Professional */
+.table {
+  color: var(--text-primary);
+}
+
+.table thead {
+  background-color: var(--bg-light);
+  color: var(--text-primary);
+  border-bottom: 2px solid var(--gray-400);
+}
+
+.table-hover tbody tr:hover {
+  background-color: var(--gray-100);
+  cursor: pointer;
+}
+
+.table-dark {
+  background-color: var(--primary-blue) !important;
+  color: #ffffff;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* Reduce intensity of row highlighting */
+.table-danger {
+  background-color: rgba(201, 80, 77, 0.08) !important;
+}
+
+.table-warning {
+  background-color: rgba(212, 168, 89, 0.08) !important;
+}
+
+.table-success {
+  background-color: rgba(90, 159, 123, 0.08) !important;
+}
+
+.table-info {
+  background-color: rgba(107, 163, 196, 0.08) !important;
+}
+
+/* Modal Styling */
+.modal-header.bg-primary {
+  background-color: var(--primary-blue) !important;
+  color: #ffffff;
+}
+
+.modal-header.bg-warning {
+  background-color: #d4a859 !important;
+  color: #ffffff;
+}
+
+.modal-backdrop {
+  background-color: rgba(44, 62, 80, 0.5);
+}
+
+/* Alert Styling - Softer Colors */
+.alert-danger {
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+  color: #721c24;
+}
+
+.alert-warning {
+  background-color: #fff3cd;
+  border-color: #ffeaa7;
+  color: #856404;
+}
+
+.alert-success {
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+  color: #155724;
+}
+
+.alert-info {
+  background-color: #d1ecf1;
+  border-color: #bee5eb;
+  color: #0c5460;
+}
+
+/* Dashboard Header */
+h2, h3, h4, h5, h6 {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* Body Background - Calm and Professional */
+body {
+  background-color: var(--bg-light);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Container Fluid Padding */
+.container-fluid {
+  background-color: var(--bg-light);
+}
+
+/* Icon Colors */
+.fa, .fas {
+  color: inherit;
+}
+
+/* Spinner */
+.spinner-border {
+  color: var(--primary-blue);
+}
+
+/* Text Colors */
+.text-primary {
+  color: var(--primary-blue) !important;
+}
+
+.text-muted {
+  color: var(--text-muted) !important;
+}
+
+.text-secondary {
+  color: var(--text-secondary) !important;
+}
+
+/* Opacity for icons */
+.opacity-50 {
+  opacity: 0.5;
+}
+
+/* Card Body Padding */
+.card-body {
+  padding: 1.5rem;
+}
+
+/* Smooth Transitions */
+* {
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Remove bright Chart.js colors - will need to update in component */
+/* These will be overridden in the TypeScript when charts are created */

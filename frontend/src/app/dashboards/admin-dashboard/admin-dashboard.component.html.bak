@@ -1,0 +1,137 @@
+<div class="container-fluid py-4">
+  <h2 class="mb-4"><i class="fas fa-tachometer-alt"></i> Admin Dashboard</h2>
+
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+  <div *ngIf="!loading && stats">
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+      <div class="col-md-3 col-sm-6 mb-3">
+        <div class="card bg-primary text-white">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="card-title">Total Requests</h6>
+                <h2 class="mb-0">{{ stats.totalRequests }}</h2>
+              </div>
+              <i class="fas fa-exclamation-circle fa-3x opacity-50"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3 col-sm-6 mb-3">
+        <div class="card bg-warning text-white">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="card-title">Pending</h6>
+                <h2 class="mb-0">{{ stats.pendingRequests }}</h2>
+              </div>
+              <i class="fas fa-clock fa-3x opacity-50"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3 col-sm-6 mb-3">
+        <div class="card bg-info text-white">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="card-title">Active</h6>
+                <h2 class="mb-0">{{ stats.activeRequests }}</h2>
+              </div>
+              <i class="fas fa-sync fa-3x opacity-50"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3 col-sm-6 mb-3">
+        <div class="card bg-success text-white">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="card-title">Resolved</h6>
+                <h2 class="mb-0">{{ stats.resolvedRequests }}</h2>
+              </div>
+              <i class="fas fa-check-circle fa-3x opacity-50"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="row mb-4">
+      <div class="col-md-4 mb-3">
+        <div class="card">
+          <div class="card-body">
+            <canvas id="statusChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 mb-3">
+        <div class="card">
+          <div class="card-body">
+            <canvas id="priorityChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 mb-3">
+        <div class="card">
+          <div class="card-body">
+            <canvas id="teamChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Requests -->
+    <div class="card">
+      <div class="card-header">
+        <h5 class="mb-0"><i class="fas fa-list"></i> Recent Requests</h5>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Victim</th>
+                <th>Location</th>
+                <th>Type</th>
+                <th>Priority</th>
+                <th>Status</th>
+                <th>Created</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let request of recentRequests">
+                <td>#{{ request.id }}</td>
+                <td>{{ request.victimName }}</td>
+                <td>{{ request.location }}</td>
+                <td><span class="badge badge-secondary">{{ request.emergencyType }}</span></td>
+                <td><span class="badge" [ngClass]="getPriorityBadgeClass(request.priority)">{{ request.priority }}</span></td>
+                <td><span class="badge" [ngClass]="getStatusBadgeClass(request.status)">{{ request.status }}</span></td>
+                <td>{{ request.createdAt | date:'short' }}</td>
+              </tr>
+              <tr *ngIf="recentRequests.length === 0">
+                <td colspan="7" class="text-center text-muted">No requests found</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

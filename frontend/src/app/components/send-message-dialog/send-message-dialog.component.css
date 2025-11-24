@@ -1,0 +1,55 @@
+.modal.show {
+  display: block !important;
+}
+
+.modal-dialog {
+  max-width: 600px;
+}
+
+.modal-header {
+  border-bottom: 2px solid #dee2e6;
+}
+
+.modal-footer {
+  border-top: 2px solid #dee2e6;
+}
+
+textarea.form-control {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.badge {
+  font-size: 0.75rem;
+  padding: 0.25em 0.5em;
+  margin-left: 5px;
+}
+
+select.form-control option {
+  padding: 8px;
+}
+
+.alert {
+  margin-bottom: 15px;
+}
+
+.close {
+  background: transparent;
+  border: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: inherit;
+  opacity: .5;
+  cursor: pointer;
+}
+
+.close:hover {
+  opacity: .75;
+}
+
+.spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+  border-width: 0.15em;
+}

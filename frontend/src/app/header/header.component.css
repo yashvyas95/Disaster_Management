@@ -1,0 +1,97 @@
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.navbar {
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    height: 64px;
+}
+
+.spacer {
+    flex: 1 1 auto;
+}
+
+.flex-grow-1 {
+    display: flex;
+    align-items: center;
+}
+
+.reddit-icon-svg {
+    height: 40px;
+    width: 40px;
+    padding-right: 8px;
+}
+
+.reddit-text {
+    font-weight: 700;
+    font-size: 18px;
+    color: white;
+    margin-left: 8px;
+}
+
+.logo {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    color: white;
+}
+
+.nav-buttons {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nav-link {
+    color: white !important;
+    text-decoration: none;
+}
+
+.sign-up-btn {
+    margin-left: 8px;
+}
+
+.user-menu {
+    display: flex;
+    align-items: center;
+}
+
+.userdetails {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: white !important;
+    background: transparent;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.userdetails:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.account-icon {
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+}
+
+/* Ensure content doesn't hide under fixed header */
+:host {
+    display: block;
+    margin-bottom: 64px;
+}

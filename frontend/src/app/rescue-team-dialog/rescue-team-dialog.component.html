@@ -1,0 +1,58 @@
+<h4 mat-dialog-title class="RequestDialog">Request Dialog</h4>
+<button class="btnCreateSubreddit" (click)="close()">Close</button>
+<mat-dialog-content>
+    <table mat-table [dataSource]="RequestData" >
+
+        <!-- Position Column -->
+        <ng-container  matColumnDef="request_id">
+          <th mat-header-cell style="text-align: center" *matHeaderCellDef> No. </th>
+          <td mat-cell style="text-align: center" *matCellDef="let element"> {{element.requestId}} </td>
+        </ng-container>
+      
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell style="text-align: center" *matHeaderCellDef> Name </th>
+          <td mat-cell style="text-align: center" *matCellDef="let element"> {{element.name}} </td>
+        </ng-container>
+      
+        <!-- Weight Column -->
+        <ng-container matColumnDef="location">
+          <th mat-header-cell style="text-align: center" *matHeaderCellDef> location </th>
+          <td mat-cell style="text-align: center" *matCellDef="let element"> {{element.location}} </td>
+        </ng-container>
+      
+
+        <ng-container matColumnDef="resTeamObj">
+          <th mat-header-cell style="text-align: center" *matHeaderCellDef> resTeamObj </th>
+          <td mat-cell style="text-align: center" *matCellDef="let element"> {{element.resTeamObj}} </td>
+        </ng-container>
+
+
+        <ng-container matColumnDef="nature">
+          <th mat-header-cell style="text-align: center" *matHeaderCellDef> nature </th>
+          <td mat-cell style="text-align: center" *matCellDef="let element"> {{element.nature}} </td>
+        </ng-container>
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="status">
+          <th mat-header-cell style="text-align: center" *matHeaderCellDef> status </th>
+          <td mat-cell style="text-align: center" *matCellDef="let element"> {{element.status}} </td>
+        </ng-container>
+        <ng-container matColumnDef="action">
+            <th mat-header-cell style="text-align: center" *matHeaderCellDef> Action </th>
+            <td mat-cell *matCellDef="let element"> 
+              <button class="btnCreateSubreddit" (click)="completeRequest(element.requestId)">complete</button> 
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="message">
+            <th mat-header-cell *matHeaderCellDef  class="align-right"> Message </th>
+            <td mat-cell *matCellDef="let element"> <button class="btnCreateSubreddit" (click)="messageDialog(element.requestId)">Message</button> </td>
+          </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      
+        <!-- Row shown when there is no matching data. -->
+    
+      </table>
+</mat-dialog-content>

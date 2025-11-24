@@ -1,0 +1,182 @@
+<div class="container-fluid py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0"><i class="fas fa-building"></i> Department Dashboard</h2>
+    <app-unified-messaging></app-unified-messaging>
+  </div>
+
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+  <div *ngIf="!loading && dashboard">
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+      <div class="col-md-3 mb-3">
+        <div class="card bg-primary text-white">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="card-title">Assigned</h6>
+                <h2 class="mb-0">{{ dashboard.assignedRequests }}</h2>
+              </div>
+              <i class="fas fa-tasks fa-3x opacity-50"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3 mb-3">
+        <div class="card bg-warning text-white">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="card-title">Pending</h6>
+                <h2 class="mb-0">{{ dashboard.pendingAssignments }}</h2>
+              </div>
+              <i class="fas fa-clock fa-3x opacity-50"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3 mb-3">
+        <div class="card bg-success text-white">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="card-title">Completed</h6>
+                <h2 class="mb-0">{{ dashboard.completedRequests }}</h2>
+              </div>
+              <i class="fas fa-check-circle fa-3x opacity-50"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3 mb-3">
+        <div class="card bg-info text-white">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="card-title">Team Utilization</h6>
+                <h2 class="mb-0">{{ dashboard.teamUtilization | number:'1.0-0' }}%</h2>
+              </div>
+              <i class="fas fa-users fa-3x opacity-50"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Assigned Requests Table -->
+    <div class="card">
+      <div class="card-header">
+        <h5 class="mb-0"><i class="fas fa-list"></i> Assigned Requests</h5>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Victim</th>
+                <th>Location</th>
+                <th>Type</th>
+                <th>Priority</th>
+                <th>Status</th>
+                <th>Created</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let request of dashboard.requests">
+                <td>#{{ request.id }}</td>
+                <td>{{ request.victimName }}</td>
+                <td>{{ request.location }}</td>
+                <td><span class="badge badge-secondary">{{ request.emergencyType }}</span></td>
+                <td><span class="badge" [ngClass]="getPriorityBadgeClass(request.priority)">{{ request.priority }}</span></td>
+                <td><span class="badge" [ngClass]="getStatusBadgeClass(request.status)">{{ request.status }}</span></td>
+                <td>{{ request.createdAt | date:'short' }}</td>
+                <td>
+                  <button class="btn btn-sm btn-primary" (click)="viewRequestDetail(request)">
+                    <i class="fas fa-eye"></i> View
+                  </button>
+                </td>
+              </tr>
+              <tr *ngIf="dashboard.requests.length === 0">
+                <td colspan="8" class="text-center text-muted">No requests assigned</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Request Detail Modal -->
+<div class="modal" [class.show]="showDetailModal" [style.display]="showDetailModal ? 'block' : 'none'">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title"><i class="fas fa-info-circle"></i> Request Details</h5>
+        <button type="button" class="close text-white" (click)="closeDetailModal()">
+          <span>&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" *ngIf="selectedRequest">
+        <div class="row">
+          <div class="col-md-6">
+            <h6 class="text-muted">Request Information</h6>
+            <p><strong>Request ID:</strong> #{{ selectedRequest.id }}</p>
+            <p><strong>Victim Name:</strong> {{ selectedRequest.victimName }}</p>
+            <p><strong>Contact:</strong> {{ selectedRequest.victimPhone || 'N/A' }}</p>
+            <p><strong>Location:</strong> {{ selectedRequest.location }}</p>
+          </div>
+          <div class="col-md-6">
+            <h6 class="text-muted">Emergency Details</h6>
+            <p><strong>Type:</strong> <span class="badge badge-info">{{ selectedRequest.emergencyType }}</span></p>
+            <p><strong>Priority:</strong> <span class="badge" [ngClass]="getPriorityBadgeClass(selectedRequest.priority)">{{ selectedRequest.priority }}</span></p>
+            <p><strong>Status:</strong> <span class="badge" [ngClass]="getStatusBadgeClass(selectedRequest.status)">{{ selectedRequest.status }}</span></p>
+            <p><strong>Created:</strong> {{ selectedRequest.createdAt | date:'medium' }}</p>
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-12">
+            <h6 class="text-muted">Description</h6>
+            <p>{{ selectedRequest.description || 'No description provided' }}</p>
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-12">
+            <h6 class="text-muted">Update Status</h6>
+            <div class="btn-group" role="group">
+              <button *ngIf="selectedRequest.status === 'ASSIGNED'" class="btn btn-info" (click)="updateStatus('EN_ROUTE')">
+                <i class="fas fa-route"></i> Mark as En Route
+              </button>
+              <button *ngIf="selectedRequest.status === 'EN_ROUTE'" class="btn btn-warning" (click)="updateStatus('ON_SCENE')">
+                <i class="fas fa-map-marker-alt"></i> Mark as On Scene
+              </button>
+              <button *ngIf="selectedRequest.status === 'ON_SCENE'" class="btn btn-success" (click)="updateStatus('RESOLVED')">
+                <i class="fas fa-check-circle"></i> Mark as Resolved
+              </button>
+              <button *ngIf="selectedRequest.status === 'RESOLVED'" class="btn btn-secondary" disabled>
+                <i class="fas fa-check"></i> Completed
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeDetailModal()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop fade" [class.show]="showDetailModal" *ngIf="showDetailModal"></div>

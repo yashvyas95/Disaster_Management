@@ -1,0 +1,142 @@
+.registration-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+}
+
+.registration-card {
+  max-width: 600px;
+  width: 100%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  border-radius: 16px;
+}
+
+mat-card-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 24px;
+  border-radius: 16px 16px 0 0;
+  margin: -16px -16px 24px -16px;
+}
+
+mat-card-title h1 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.subtitle {
+  margin: 8px 0 0 0;
+  opacity: 0.9;
+  font-size: 14px;
+}
+
+h2 {
+  color: #667eea;
+  font-size: 18px;
+  margin-top: 24px;
+  margin-bottom: 16px;
+  font-weight: 600;
+  border-bottom: 2px solid #667eea;
+  padding-bottom: 8px;
+}
+
+.form-row {
+  margin-bottom: 16px;
+}
+
+.form-row.two-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.half-width {
+  width: 48%;
+}
+
+mat-form-field {
+  display: block;
+}
+
+.form-actions {
+  margin-top: 32px;
+  text-align: center;
+}
+
+.submit-button {
+  width: 100%;
+  height: 48px;
+  font-size: 16px;
+  font-weight: 600;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  position: relative;
+}
+
+.button-spinner {
+  display: inline-block;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.login-link {
+  margin-top: 16px;
+  font-size: 14px;
+  color: #666;
+}
+
+.login-link a {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.login-link a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  .registration-container {
+    padding: 10px;
+  }
+
+  .registration-card {
+    margin: 10px;
+  }
+
+  .form-row.two-columns {
+    grid-template-columns: 1fr;
+  }
+
+  .half-width {
+    width: 100%;
+  }
+
+  mat-card-title h1 {
+    font-size: 24px;
+  }
+}
+
+/* Material Icon Styling */
+mat-icon {
+  color: #667eea;
+}
+
+/* Error Styling */
+mat-error {
+  font-size: 12px;
+}
+
+/* Hint Styling */
+mat-hint {
+  font-size: 11px;
+  color: #999;
+}

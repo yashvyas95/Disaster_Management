@@ -1,0 +1,215 @@
+<!-- Messaging Button -->
+<button class="btn btn-primary position-relative" (click)="openMessaging('inbox')" type="button">
+  <i class="fas fa-envelope"></i> Messages
+  <span *ngIf="unreadCount > 0" class="badge badge-pill badge-danger unread-badge">
+    {{ unreadCount }}
+  </span>
+</button>
+
+<!-- Unified Messaging Modal -->
+<div class="modal messaging-modal fade"
+     [class.show]="showMessaging"
+     [style.display]="showMessaging ? 'block' : 'none'"
+     (click)="$event.target === $event.currentTarget && closeMessaging()">
+  <div class="modal-dialog modal-lg" (click)="$event.stopPropagation()">
+    <div class="modal-content">
+      <!-- Header with Tabs -->
+      <div class="modal-header bg-primary text-white">
+        <div class="d-flex align-items-center w-100">
+          <h5 class="modal-title mb-0">
+            <i class="fas fa-envelope"></i> Messages
+          </h5>
+          <div class="btn-group ml-auto mr-3" role="group">
+            <button type="button"
+                    class="btn btn-sm"
+                    [class.btn-light]="activeTab === 'inbox'"
+                    [class.btn-outline-light]="activeTab !== 'inbox'"
+                    (click)="switchTab('inbox')">
+              <i class="fas fa-inbox"></i> Inbox
+              <span *ngIf="unreadCount > 0" class="badge badge-danger ml-1">{{ unreadCount }}</span>
+            </button>
+            <button type="button"
+                    class="btn btn-sm"
+                    [class.btn-light]="activeTab === 'compose'"
+                    [class.btn-outline-light]="activeTab !== 'compose'"
+                    (click)="switchTab('compose')">
+              <i class="fas fa-edit"></i> Compose
+            </button>
+          </div>
+        </div>
+        <button type="button" class="close text-white" (click)="closeMessaging()">
+          <span>&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body messaging-body">
+        <!-- Loading Spinner -->
+        <div *ngIf="loading" class="text-center py-5">
+          <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Loading...</span>
+          </div>
+        </div>
+
+        <!-- Error/Success Messages -->
+        <div *ngIf="error" class="alert alert-danger alert-dismissible fade show">
+          <i class="fas fa-exclamation-circle"></i> {{ error }}
+          <button type="button" class="close" (click)="error = ''">
+            <span>&times;</span>
+          </button>
+        </div>
+
+        <div *ngIf="success" class="alert alert-success alert-dismissible fade show">
+          <i class="fas fa-check-circle"></i> {{ success }}
+          <button type="button" class="close" (click)="success = ''">
+            <span>&times;</span>
+          </button>
+        </div>
+
+        <!-- INBOX TAB -->
+        <div *ngIf="activeTab === 'inbox' && !loading">
+          <!-- Conversation List -->
+          <div *ngIf="!selectedPartner">
+            <div *ngIf="conversationPartners.length > 0" class="list-group">
+              <button *ngFor="let partner of conversationPartners"
+                      class="list-group-item list-group-item-action"
+                      (click)="openConversation(partner)">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <h6 class="mb-1">
+                      <i class="fas fa-user-circle"></i> {{ partner.fullName }}
+                      <span class="badge ml-2" [ngClass]="getRoleBadgeClass(partner.role)">
+                        {{ getRoleDisplayName(partner.role) }}
+                      </span>
+                    </h6>
+                    <small class="text-muted">{{ partner.email }}</small>
+                  </div>
+                  <i class="fas fa-chevron-right"></i>
+                </div>
+              </button>
+            </div>
+
+            <div *ngIf="conversationPartners.length === 0" class="text-center py-5 text-muted">
+              <i class="fas fa-inbox fa-3x mb-3"></i>
+              <p>No conversations yet</p>
+              <button class="btn btn-primary" (click)="switchTab('compose')">
+                <i class="fas fa-edit"></i> Send a Message
+              </button>
+            </div>
+          </div>
+
+          <!-- Conversation View -->
+          <div *ngIf="selectedPartner" class="conversation-view">
+            <div class="conversation-header mb-3">
+              <button class="btn btn-sm btn-outline-secondary" (click)="backToList()">
+                <i class="fas fa-arrow-left"></i> Back
+              </button>
+              <span class="ml-2">
+                <i class="fas fa-user-circle"></i> {{ selectedPartner.fullName }}
+                <span class="badge ml-2" [ngClass]="getRoleBadgeClass(selectedPartner.role)">
+                  {{ getRoleDisplayName(selectedPartner.role) }}
+                </span>
+              </span>
+            </div>
+
+            <div class="messages-container">
+              <div *ngFor="let message of conversationMessages"
+                   class="message-item"
+                   [class.message-sent]="isMessageFromMe(message)"
+                   [class.message-received]="!isMessageFromMe(message)">
+                <div class="message-bubble">
+                  <div class="message-header">
+                    <strong>{{ message.sender.fullName }}</strong>
+                    <small class="ml-2 text-muted">{{ formatDate(message.createdAt) }}</small>
+                    <span *ngIf="message.isRead && isMessageFromMe(message)" class="ml-2">
+                      <i class="fas fa-check-double text-info" title="Read"></i>
+                    </span>
+                  </div>
+                  <div class="message-content">{{ message.content }}</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="conversation-footer mt-3 text-center">
+              <button class="btn btn-primary" (click)="replyToConversation()">
+                <i class="fas fa-reply"></i> Reply
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- COMPOSE TAB -->
+        <div *ngIf="activeTab === 'compose' && !loading">
+          <div class="compose-form">
+            <div class="form-group">
+              <label for="recipient">
+                <i class="fas fa-user"></i> To: <span class="text-danger">*</span>
+              </label>
+              <select class="form-control"
+                      id="recipient"
+                      [(ngModel)]="selectedRecipient"
+                      [disabled]="loading">
+                <option [value]="null">-- Select recipient --</option>
+                <option *ngFor="let recipient of availableRecipients" [value]="recipient.id">
+                  {{ recipient.fullName }} ({{ getRoleDisplayName(recipient.role) }})
+                </option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="messageContent">
+                <i class="fas fa-comment"></i> Message <span class="text-danger">*</span>
+              </label>
+              <textarea class="form-control"
+                        id="messageContent"
+                        rows="8"
+                        [(ngModel)]="messageContent"
+                        placeholder="Type your message here..."
+                        maxlength="2000"
+                        [disabled]="loading"></textarea>
+              <small class="form-text text-muted">
+                {{ messageContent.length }}/2000 characters
+              </small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button"
+                class="btn btn-secondary"
+                (click)="closeMessaging()"
+                [disabled]="loading">
+          <i class="fas fa-times"></i> Close
+        </button>
+
+        <button *ngIf="activeTab === 'compose'"
+                type="button"
+                class="btn btn-outline-secondary"
+                (click)="resetComposeForm()"
+                [disabled]="loading">
+          <i class="fas fa-eraser"></i> Clear
+        </button>
+
+        <button *ngIf="activeTab === 'compose'"
+                type="button"
+                class="btn btn-primary"
+                (click)="sendMessage()"
+                [disabled]="loading || !selectedRecipient || !messageContent.trim()">
+          <span *ngIf="loading">
+            <span class="spinner-border spinner-border-sm mr-1"></span>
+            Sending...
+          </span>
+          <span *ngIf="!loading">
+            <i class="fas fa-paper-plane"></i> Send Message
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Backdrop -->
+<div class="modal-backdrop fade"
+     [class.show]="showMessaging"
+     *ngIf="showMessaging"
+     (click)="closeMessaging()"></div>

@@ -1,0 +1,159 @@
+<div class="admin-container">
+  <div class="dashboard-header">
+    <h1>Emergency Management Dashboard</h1>
+    <div class="header-actions">
+      <button mat-icon-button>
+        <mat-icon>notifications</mat-icon>
+      </button>
+      <button mat-icon-button>
+        <mat-icon>settings</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="stats-grid">
+    <mat-card class="stat-card critical-card">
+      <div class="stat-icon">
+        <mat-icon>local_fire_department</mat-icon>
+      </div>
+      <div class="stat-content">
+        <h3>Active Emergencies</h3>
+        <p class="stat-number">{{activeEmergenciesCount}}</p>
+        <span class="stat-label">Requires immediate attention</span>
+      </div>
+    </mat-card>
+
+    <mat-card class="stat-card teams-card">
+      <div class="stat-icon">
+        <mat-icon>groups</mat-icon>
+      </div>
+      <div class="stat-content">
+        <h3>Teams Available</h3>
+        <p class="stat-number">{{availableTeamsCount}}/{{totalTeamsCount}}</p>
+        <span class="stat-label">Ready for deployment</span>
+      </div>
+    </mat-card>
+
+    <mat-card class="stat-card messages-card">
+      <div class="stat-icon">
+        <mat-icon>message</mat-icon>
+      </div>
+      <div class="stat-content">
+        <h3>Unread Messages</h3>
+        <p class="stat-number">{{unreadMessagesCount}}</p>
+        <span class="stat-label">Pending responses</span>
+      </div>
+    </mat-card>
+
+    <mat-card class="stat-card completed-card">
+      <div class="stat-icon">
+        <mat-icon>check_circle</mat-icon>
+      </div>
+      <div class="stat-content">
+        <h3>Completed Today</h3>
+        <p class="stat-number">{{completedTodayCount}}</p>
+        <span class="stat-label">Successfully resolved</span>
+      </div>
+    </mat-card>
+  </div>
+
+  <!-- Main Content with Tabs -->
+  <mat-card class="main-content-card">
+    <mat-tab-group>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="tab-icon">message</mat-icon>
+          Messages
+        </ng-template>
+        <div class="tab-content">
+          <div class="table-header">
+            <h2>Recent Messages</h2>
+            <mat-form-field class="search-field" appearance="outline">
+              <mat-label>Search messages</mat-label>
+              <input matInput placeholder="Search by sender or content...">
+              <mat-icon matSuffix>search</mat-icon>
+            </mat-form-field>
+          </div>
+
+          <div *ngIf="messages.length === 0" class="empty-state">
+            <mat-icon>inbox</mat-icon>
+            <p>No messages yet</p>
+          </div>
+
+          <table mat-table [dataSource]="messages" class="messages-table" *ngIf="messages.length > 0">
+            <ng-container matColumnDef="sender">
+              <th mat-header-cell *matHeaderCellDef>Sender</th>
+              <td mat-cell *matCellDef="let element">
+                <div class="sender-cell">
+                  <mat-icon class="sender-icon">person</mat-icon>
+                  <span>{{element.sender || 'Unknown'}}</span>
+                </div>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="content">
+              <th mat-header-cell *matHeaderCellDef>Message</th>
+              <td mat-cell *matCellDef="let element">
+                <span class="message-preview">{{element.content || element.message}}</span>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="timestamp">
+              <th mat-header-cell *matHeaderCellDef>Time</th>
+              <td mat-cell *matCellDef="let element">
+                <span class="timestamp">{{element.timestamp | date:'short'}}</span>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          </table>
+        </div>
+      </mat-tab>
+
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="tab-icon">dashboard</mat-icon>
+          Quick Actions
+        </ng-template>
+        <div class="tab-content">
+          <div class="action-grid">
+            <button mat-raised-button class="action-button" (click)="openRescueDialog()">
+              <mat-icon>assignment</mat-icon>
+              <span>View All Requests</span>
+            </button>
+            <button mat-raised-button class="action-button" (click)="openRescueTeamInfo()">
+              <mat-icon>info</mat-icon>
+              <span>Rescue Team Info</span>
+            </button>
+            <button mat-raised-button class="action-button" (click)="openDepartmentDialog()">
+              <mat-icon>business</mat-icon>
+              <span>Departments</span>
+            </button>
+            <button mat-raised-button class="action-button" (click)="openEmployeesInfoDialog()">
+              <mat-icon>badge</mat-icon>
+              <span>Employees</span>
+            </button>
+            <button mat-raised-button class="action-button" (click)="openChatLobby()">
+              <mat-icon>chat</mat-icon>
+              <span>Chat Lobby</span>
+            </button>
+            <button mat-raised-button class="action-button" (click)="createRescueTeam()">
+              <mat-icon>group_add</mat-icon>
+              <span>Create Rescue Team</span>
+            </button>
+            <button mat-raised-button class="action-button" (click)="createDepartment()">
+              <mat-icon>add_business</mat-icon>
+              <span>Create Department</span>
+            </button>
+            <button mat-raised-button class="action-button" (click)="openallMessageDialog()">
+              <mat-icon>forum</mat-icon>
+              <span>All Messages</span>
+            </button>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card>
+</div>

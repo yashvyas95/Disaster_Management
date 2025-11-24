@@ -1,0 +1,262 @@
+.admin-container {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.dashboard-header h1 {
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.header-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  display: flex;
+  gap: 16px;
+  padding: 24px !important;
+  border-radius: 12px !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12) !important;
+}
+
+.stat-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.9);
+}
+
+.stat-icon mat-icon {
+  font-size: 32px;
+  width: 32px;
+  height: 32px;
+}
+
+.critical-card {
+  background: linear-gradient(135deg, #d32f2f 0%, #f44336 100%);
+  color: white;
+}
+
+.critical-card .stat-icon {
+  background: rgba(255,255,255,0.2);
+}
+
+.critical-card .stat-icon mat-icon {
+  color: white;
+}
+
+.teams-card {
+  background: linear-gradient(135deg, #1976d2 0%, #2196f3 100%);
+  color: white;
+}
+
+.teams-card .stat-icon {
+  background: rgba(255,255,255,0.2);
+}
+
+.teams-card .stat-icon mat-icon {
+  color: white;
+}
+
+.messages-card {
+  background: linear-gradient(135deg, #f57c00 0%, #ff9800 100%);
+  color: white;
+}
+
+.messages-card .stat-icon {
+  background: rgba(255,255,255,0.2);
+}
+
+.messages-card .stat-icon mat-icon {
+  color: white;
+}
+
+.completed-card {
+  background: linear-gradient(135deg, #388e3c 0%, #4caf50 100%);
+  color: white;
+}
+
+.completed-card .stat-icon {
+  background: rgba(255,255,255,0.2);
+}
+
+.completed-card .stat-icon mat-icon {
+  color: white;
+}
+
+.stat-content {
+  flex: 1;
+}
+
+.stat-content h3 {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  font-weight: 500;
+  opacity: 0.9;
+}
+
+.stat-number {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 8px 0;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+/* Main Content Card */
+.main-content-card {
+  margin-top: 24px;
+}
+
+.tab-content {
+  padding: 24px;
+}
+
+.tab-icon {
+  margin-right: 8px;
+}
+
+/* Table Styles */
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.table-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.search-field {
+  width: 300px;
+}
+
+.messages-table {
+  width: 100%;
+  margin-top: 16px;
+}
+
+.sender-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sender-icon {
+  color: var(--text-secondary);
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.message-preview {
+  display: block;
+  max-width: 400px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.timestamp {
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+/* Action Grid */
+.action-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.action-button {
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 14px;
+  text-transform: none;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08) !important;
+  transition: all 0.3s ease;
+}
+
+.action-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+}
+
+.action-button mat-icon {
+  font-size: 32px;
+  width: 32px;
+  height: 32px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .admin-container {
+    padding: 16px;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .search-field {
+    width: 100%;
+  }
+
+  .table-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .action-grid {
+    grid-template-columns: 1fr;
+  }
+  }
+
+  .sidebar>ul>li{
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 20px;
+    color: #1c1c1c;
+  }

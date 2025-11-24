@@ -1,0 +1,38 @@
+<div class="login-section">
+    <div class="row justify-content-center">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header" style="text-align: center"><h4>Victim Login</h4></div>
+                <div class="card-body">
+                    <form [formGroup]="requestForm" (ngSubmit)="fetchRequest()">
+                        <div class="form-group row">
+                            <label for="victim_name" class="col-md-4 col-form-label text-md-right">Full Name</label>
+                            <div class="col-md-6">
+                                <input type="text" id="victim_name" class="form-control" [formControlName]="'fullName'" name="victim_name" required
+                                    autofocus>
+                                                                
+                            </div>
+                        </div>
+ 
+                        <div class="form-group row">
+                            <label for="location" class="col-md-4 col-form-label text-md-right">Location</label>
+                            <div class="col-md-6">
+                                <input type="text" id="location" class="form-control" [formControlName]="'location'" name="location" required>
+                                                              
+                            </div>
+                        </div>
+ 
+                        <span class="col-md-6 offset-md-4">
+                            <button type="submit" class="login">
+                                Login
+                            </button>
+                        </span>   
+                                        
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+</div>

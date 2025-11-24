@@ -1,0 +1,62 @@
+
+ 
+ <span class="col-md-6 offset-md-10">              
+    <button type="button" (click)="close()"class="sign-up">
+        close
+     </button>
+</span>
+<div class="col-md-12">
+            <div class="card">
+                <div class="card-header" style="text-align: center">
+                    <h4>Register Department</h4>
+                </div>
+                <div class="card-body">
+                    <form group="Department-form" [formGroup]="departmentForm" (ngSubmit)="createDepartment(departmentForm.value)">
+                        <div class="form-group row">
+                            <label for="name" class="col-md-6 col-form-label text-md-right">Department name</label>
+                            <div class="col-md-6">
+                                <input type="text" id="name" class="form-control" [formControlName]="'name'" name="name" required
+                                    autofocus>
+                                
+                            </div>
+            
+                       
+                        </div>
+                        <div class="form-group row">
+                            <label for="email_address" class="col-md-6 col-form-label text-md-right">Employees</label>
+                            <div class="col-md-6">
+                                    <mat-form-field appearance="fill">
+                                        <mat-label>All Employees</mat-label>
+                                        <mat-select [formControl]="SelectedEmployees" multiple>
+                                            <!--
+                                            <mat-select-trigger>
+                                                {{SelectedEmployees.value ? SelectedEmployees.value[0] : ''}}
+                                                <span *ngIf="SelectedEmployees?.length > 1" class="example-additional-selection">
+                                                  (+{{SelectedEmployees.value.length - 1}} {{SelectedEmployees?.value.length === 2 ? 'other' : 'others'}})
+                                                </span>
+                                              </mat-select-trigger>
+                                              -->
+                                          <mat-option *ngFor="let user of allemp" [value]="user.userId">{{user.userId}}---{{user.department}}</mat-option>
+                                        </mat-select>
+                                      </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="location" class="col-md-6 col-form-label text-md-right">Location</label>
+                            <div class="col-md-6">
+                                <input type="text" id="location" class="form-control" [formControlName]="'location'" name="location" required
+                                    autofocus>
+                                
+                            </div>
+                            
+                        </div>
+                        <span class="col-md-6 offset-md-4">
+                            
+                            <button type="submit" class="sign-up">
+                                Create
+                            </button>
+                        </span>
+                    </form>
+                </div>
+            </div>

@@ -1,0 +1,14 @@
+
+.btnCreateSubreddit{
+    margin-top: 5px;
+    color: #0079D3;
+    background-color: transparent;
+  }
+
+  
+  .align-right{
+    display: flex;
+    padding: 21px 0;
+    justify-content: flex-end;
+  }
+  

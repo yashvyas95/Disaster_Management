@@ -1,0 +1,254 @@
+/* You can add global styles to this file, and also import other style files */
+@import './theme.scss';
+@import './styles-professional.css';
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  margin: 0;
+  height: 100%;
+  background-color: var(--background-default);
+  color: var(--text-primary);
+  padding-top: 64px; /* Account for fixed toolbar */
+}
+
+/* Form validation styles */
+input.ng-invalid.ng-touched,
+textarea.ng-invalid.ng-touched {
+  border: 2px solid var(--emergency-critical) !important;
+}
+
+.mat-mdc-form-field.ng-invalid.ng-touched .mat-mdc-text-field-wrapper {
+  border-color: var(--emergency-critical);
+}
+
+/* Button styles */
+.login,
+.sign-up {
+  background-color: var(--emergency-critical);
+  border-color: var(--emergency-critical);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  text-align: center;
+  letter-spacing: 0.5px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 36px;
+  text-transform: uppercase;
+  padding: 8px 24px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.login:hover,
+.sign-up:hover {
+  background-color: #b71c1c;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  transform: translateY(-1px);
+}
+
+.login:disabled,
+.sign-up:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Utility classes */
+.full-width {
+  width: 100%;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.version-info {
+  font-size: 8pt;
+  float: right;
+  margin: 8px;
+}
+
+/* Priority badges */
+.priority-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.priority-critical {
+  background: var(--emergency-critical);
+  color: white;
+}
+
+.priority-high {
+  background: var(--emergency-high);
+  color: white;
+}
+
+.priority-medium {
+  background: var(--emergency-medium);
+  color: rgba(0,0,0,0.87);
+}
+
+.priority-low {
+  background: var(--emergency-low);
+  color: white;
+}
+
+/* Status chips */
+.status-in_progress,
+.status-in-progress {
+  background: var(--status-active) !important;
+  color: white !important;
+}
+
+.status-assigned {
+  background: var(--status-assigned) !important;
+  color: white !important;
+}
+
+.status-pending {
+  background: var(--status-pending) !important;
+  color: rgba(0,0,0,0.87) !important;
+}
+
+.status-completed {
+  background: var(--status-completed) !important;
+  color: white !important;
+}
+
+/* Pulse animation for live indicators */
+.pulse-dot {
+  height: 12px;
+  width: 12px;
+  background-color: #4caf50;
+  border-radius: 50%;
+  display: inline-block;
+  animation: pulse 2s infinite;
+  margin-right: 8px;
+}
+
+.pulse-dot.critical {
+  background-color: var(--emergency-critical);
+}
+
+.pulse-dot.active {
+  background-color: var(--status-active);
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(76, 175, 80, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(76, 175, 80, 0);
+  }
+}
+
+/* Loading spinner */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--text-secondary);
+}
+
+.empty-state .empty-icon {
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
+.empty-state h3 {
+  margin: 16px 0 8px;
+  color: var(--text-primary);
+}
+
+/* Card improvements */
+.mat-mdc-card {
+  border-radius: 12px !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08) !important;
+  transition: box-shadow 0.3s ease;
+}
+
+.mat-mdc-card:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12) !important;
+}
+
+/* Table improvements */
+.mat-mdc-table {
+  width: 100%;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.mat-mdc-header-row {
+  background-color: #f5f5f5;
+}
+
+.mat-mdc-row:hover {
+  background-color: rgba(0,0,0,0.02);
+}
+
+/* Responsive utilities */
+@media (max-width: 767px) {
+  body {
+    padding: 16px;
+    padding-top: 56px;
+  }
+
+  .hide-mobile {
+    display: none !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .hide-desktop {
+    display: none !important;
+  }
+}
+
+/* Screen reader only */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}

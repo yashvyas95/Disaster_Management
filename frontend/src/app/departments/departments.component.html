@@ -1,0 +1,44 @@
+<h4 mat-dialog-title class="AssignRequestDialog">Departments</h4>
+<button class="btnCreateSubreddit" (click)="close()">Close</button>
+<mat-dialog-content>
+    <table mat-table [dataSource]="allDep" >
+
+        <!-- Position Column -->
+        <ng-container  matColumnDef="department_id">
+          <th mat-header-cell style="text-align: center" *matHeaderCellDef> Id. </th>
+          <td mat-cell style="text-align: center" *matCellDef="let element"> {{element.department_id}} </td>
+        </ng-container>
+      
+        <ng-container  matColumnDef="name">
+          <th mat-header-cell style="text-align: center" *matHeaderCellDef> Name. </th>
+          <td mat-cell style="text-align: center" *matCellDef="let element"> {{element.name}} </td>
+        </ng-container>
+      
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="employees">
+          <th mat-header-cell style="text-align: center" *matHeaderCellDef> Employees </th>
+          <td mat-cell style="text-align: center" *matCellDef="let element"> {{element.employees}} </td>
+        </ng-container>
+      
+        <!-- Weight Column -->
+        <ng-container matColumnDef="location">
+          <th mat-header-cell style="text-align: center" *matHeaderCellDef> location </th>
+          <td mat-cell style="text-align: center" *matCellDef="let element"> {{element.location}} </td>
+        </ng-container>
+      
+        <ng-container  matColumnDef="status">
+          <th mat-header-cell style="text-align: center" *matHeaderCellDef> status. </th>
+          <td mat-cell style="text-align: center" *matCellDef="let element"> {{element.status}} </td>
+        </ng-container>
+      
+        
+       <!-- Symbol Column -->
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      
+        <!-- Row shown when there is no matching data. -->
+    
+      </table>
+</mat-dialog-content>

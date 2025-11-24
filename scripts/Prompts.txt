@@ -1,0 +1,187 @@
+	Role: Expert Senior Software Engineer and Architect
+	Context: We are mordernizing my academic project.
+	Aim: Fully functional,tested mordernized Disaster Management V2 with mordern fetaures.
+	Requirement:
+		1. Fully Functional app.
+		2. Mordern Design Patterns applied.
+		3. All Pages tested.
+		4. Admin Dashboard shows all open request in recent request.
+		5. Admin should be able to edit and assign manually as well the request apart of automatic request allocation.
+		6. Fix all dashboard view and interaction with the request assigned.
+		
+	Accepted Output should have:
+		1. Fully Functional and Tested applcations with the given set of requirements.
+		
+		
+		
+Context: While testing from UI issues were found
+Issues: 1. No user are able to interact with view/action button with request present.
+		2. Too many colors are used / Change the tone of website to professional and calm website
+Next Steps:
+		1. Fix the issues
+Expected Outcome.
+		1. All users should be able to use view button on screen
+		
+-----------------------------------------------------------------------------------
+
+Context: 
+Issues: 1. No user are able to interact with view/action button with request present.
+		2. Too many colors are used / Change the tone of website to professional and calm website
+Next Steps:
+		1. Fix the issues
+Expected Outcome.
+		1. All users should be able to use view button on screen		
+		
+-----------------------------------------------------------------------------------
+
+Settings: Dont create summary document when not specified in prompt
+Issue: 
+	1. Admin dashboard has Two tables as recent request and all open request -> Requirement : Merge both tables and show only one table which reflects all open request and recent request data from database.
+	
+	
+-----------------------------------------------------------------------------------
+
+Issues on Admin Dashboard that needs attention:
+	1. Follwing div is empty <div _ngcontent-ng-c3693436104="" class="card-body"><canvas _ngcontent-ng-c3693436104="" id="priorityChart"></canvas></div>
+	2. <div _ngcontent-ng-c3693436104="" class="card-body"><canvas _ngcontent-ng-c3693436104="" id="statusChart" width="423" height="424" style="display: block; box-sizing: border-box; height: 284px; width: 284px;"></canvas></div> Following div on hover is decreasing in size fix that.
+	3. <div _ngcontent-ng-c3693436104="" class="card-body" style="height: 350px; display: flex; align-items: center; justify-content: center;"><canvas _ngcontent-ng-c3693436104="" id="teamChart"></canvas></div> Follwing div is empty
+	4. Presently No request are visible on Emergency Request
+	
+	
+-----------------------------------------------------------------------------------
+
+Issues on Admin Dashboard:
+	1. Still both the div are empty.
+	2. No data is visible on Emergency Request Table.
+	
+Console Logs from Browser:
+	Failed to load resource: the server responded with a status of 500 ()Understand this error
+:8080/api/rescueTeam:1  Failed to load resource: the server responded with a status of 500 ()Understand this error
+installHook.js:1 HTTP Error: Qi
+overrideMethod @ installHook.js:1Understand this error
+installHook.js:1 Error loading teams: Qi
+overrideMethod @ installHook.js:1Understand this error
+installHook.js:1 HTTP Error: Qi
+overrideMethod @ installHook.js:1Understand this error
+installHook.js:1 Error loading requests: Qi
+overrideMethod @ installHook.js:1Understand this error
+installHook.js:1 ERROR TypeError: Cannot convert undefined or null to object
+    at Object.keys (<anonymous>)
+    at n.initializeCharts (main-MXKCEPOF.js:3:45616)
+    at main-MXKCEPOF.js:3:44108
+    at P.<computed> (polyfills-FFHMD2TL.js:1:21493)
+    at f.invokeTask (polyfills-FFHMD2TL.js:1:7068)
+    at Object.onInvokeTask (chunk-5LZ6PIKJ.js:8:29761)
+    at f.invokeTask (polyfills-FFHMD2TL.js:1:6989)
+    at t.runTask (polyfills-FFHMD2TL.js:1:2375)
+    at invokeTask (polyfills-FFHMD2TL.js:1:8144)
+    at E.g.useG.invoke (polyfills-FFHMD2TL.js:1:8045)
+overrideMethod @ installHook.js:1Understand this error
+dashboard:1  Failed to load resource: the server responded with a status of 404 (Not Found)Understand this error
+main-MXKCEPOF.js:3 Cache MISS: http://localhost:8080/api/auth/userByUsername?username=admin - caching response
+
+
+-----------------------------------------------------------------------------------
+
+Console logs from browser:
+
+main-HIQ2BMKM.js:1 Login successful. User role: ROLE_ADMIN
+main-HIQ2BMKM.js:1 Routing to admin dashboard
+main-HIQ2BMKM.js:3 HTTP Error: Qi
+handleError @ main-HIQ2BMKM.js:3Understand this error
+main-HIQ2BMKM.js:3 Error loading requests: Qi
+error @ main-HIQ2BMKM.js:3Understand this error
+chunk-W2FHWKOA.js:8 ERROR TypeError: Cannot convert undefined or null to object
+    at Object.keys (<anonymous>)
+    at n.initializeCharts (main-HIQ2BMKM.js:3:45616)
+    at main-HIQ2BMKM.js:3:44108
+    at P.<computed> (polyfills-FFHMD2TL.js:1:21493)
+    at f.invokeTask (polyfills-FFHMD2TL.js:1:7068)
+    at Object.onInvokeTask (chunk-W2FHWKOA.js:8:29761)
+    at f.invokeTask (polyfills-FFHMD2TL.js:1:6989)
+    at t.runTask (polyfills-FFHMD2TL.js:1:2375)
+    at invokeTask (polyfills-FFHMD2TL.js:1:8144)
+    at E.g.useG.invoke (polyfills-FFHMD2TL.js:1:8045)
+handleError @ chunk-W2FHWKOA.js:8Understand this error
+dashboard:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+
+Emergency Table is not showing request for admin 
+
+---------------------------------------------------------------
+
+
+Task for Disaster Management V2: 
+	1. Remove all markdown files.
+	2. Analyse present status of frontend and backend
+	3. Accordingly create markdown files in this format:
+		Role -> You are the expert digital technical content writer
+		3.1 : Technical document
+		3.2 : User Guide
+		3.3 : Analysis -> Strengths
+		3.4 : Next Features + Next steps for mordernization.
+	4. Check Frontend and backend connection and all button are working with functionality accordintly from dashboard.
+	5. Create unit test.
+
+---------------------------------------------------------------
+
+Enhancement : 
+	
+	. Add send message button -> onclick open message dialog which can be used to type the message and send button to send the message and reset button which clears the dialogs.
+	. All employees should be able to message other employees and admin.
+	. Employees from rescue team should be able to message victim for whom emergency request is created.
+	. Admin should be able to message all employees and victim users.
+	
+	
+---------------------------------------------------------------
+
+Enhancement:
+	1. Create show message button from where user can see the messages received by him
+	2. From Action dialog give access to send message
+	
+	
+---------------------------------------------------------------
+
+Issues found while testing from UI:
+	1. Dashboard -> action of assigning team has no effect.
+	2. Make send Message and Messages button as a single combined elegant dialog.
+	3. Fix nav bar click on navigation
+	4. Check and fix routing in application from UI to backend
+	
+	
+---------------------------------------------------------------
+
+Role: Expert Senior Software Engineer and Architect
+Context: We are mordernizing my academic project.
+Aim: Fully functional,tested mordernized Disaster Management V2 with mordern fetaures.
+Requirement:
+		1. Fully Functional app.
+		2. Mordern Design Patterns applied.
+		3. All Pages tested.
+		4. All Users types should be able to use the messaging functionality.
+Issues:
+	1. Users are not presently able to assign/complete/edit/change the emergency request from UI.
+	2. On UI send Messages and show messages are shown as two button, combine these button and use the mordernized feature.
+	
+	
+---------------------------------------------------------------
+
+Response	
+{
+    "timestamp": "2025-11-23T23:35:33.578294596Z",
+    "status": 500,
+    "error": "Internal Server Error",
+    "message": "An unexpected error occurred. Please contact support.",
+    "path": "/api/requests/emergency"
+}
+Payload
+{
+    "victimName": "Test1",
+    "victimPhone": "",
+    "location": "test",
+    "latitude": 0,
+    "longitude": 0,
+    "emergencyType": "FIRE",
+    "priority": "HIGH",
+    "description": "People affected: 2. Fire emergency. "
+}
+---------------------------------------------------------------

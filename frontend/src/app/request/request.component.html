@@ -1,0 +1,129 @@
+<div class="request-container">
+  <mat-card class="request-card">
+    <mat-card-header>
+      <div class="request-header">
+        <mat-icon class="header-icon">emergency</mat-icon>
+        <h1>Create Emergency Request</h1>
+        <p class="subtitle">Please provide details about the emergency</p>
+      </div>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="requestForm" (ngSubmit)="onSubmit(requestForm.value)">
+        <!-- Name Field -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Your Name</mat-label>
+          <input
+            matInput
+            formControlName="name"
+            placeholder="Enter your full name"
+            required>
+          <mat-icon matPrefix>person</mat-icon>
+          <mat-error *ngIf="requestForm.get('name')?.hasError('required')">
+            Name is required
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Number of People Field -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Number of People Affected</mat-label>
+          <input
+            matInput
+            type="number"
+            formControlName="people"
+            placeholder="How many people need help?"
+            min="1"
+            max="100"
+            required>
+          <mat-icon matPrefix>groups</mat-icon>
+          <mat-error *ngIf="requestForm.get('people')?.hasError('required')">
+            Number of people is required
+          </mat-error>
+          <mat-error *ngIf="requestForm.get('people')?.hasError('min')">
+            Must be at least 1
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Location Field -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Location</mat-label>
+          <input
+            matInput
+            formControlName="location"
+            placeholder="Enter exact location (street, building, landmark)"
+            required>
+          <mat-icon matPrefix>place</mat-icon>
+          <mat-error *ngIf="requestForm.get('location')?.hasError('required')">
+            Location is required
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Emergency Type Selection -->
+        <div class="emergency-type-section">
+          <label class="section-label">Type of Emergency (Select at least one)</label>
+
+          <div class="emergency-chips">
+            <mat-checkbox
+              formControlName="fire"
+              [(ngModel)]="request.fire"
+              class="emergency-chip fire-chip">
+              <mat-icon>local_fire_department</mat-icon>
+              Fire
+            </mat-checkbox>
+
+            <mat-checkbox
+              formControlName="medical"
+              [(ngModel)]="request.medical"
+              class="emergency-chip medical-chip">
+              <mat-icon>medical_services</mat-icon>
+              Medical Emergency
+            </mat-checkbox>
+
+            <mat-checkbox
+              formControlName="crime"
+              [(ngModel)]="request.crime"
+              class="emergency-chip crime-chip">
+              <mat-icon>shield</mat-icon>
+              Crime/Security
+            </mat-checkbox>
+          </div>
+          <mat-error *ngIf="!request.fire && !request.medical && !request.crime && requestForm.touched" class="emergency-error">
+            Please select at least one emergency type
+          </mat-error>
+        </div>
+
+        <!-- Additional Information (Optional) -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Additional Information (Optional)</mat-label>
+          <textarea
+            matInput
+            rows="4"
+            placeholder="Any additional details that may help responders..."
+            maxlength="500"></textarea>
+          <mat-icon matPrefix>description</mat-icon>
+        </mat-form-field>
+
+        <!-- Submit Button -->
+        <div class="form-actions">
+          <button
+            mat-raised-button
+            color="warn"
+            type="submit"
+            class="submit-button"
+            [disabled]="requestForm.invalid">
+            <mat-icon>send</mat-icon>
+            Submit Emergency Request
+          </button>
+
+          <button
+            mat-button
+            type="button"
+            class="cancel-button"
+            routerLink="/home">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

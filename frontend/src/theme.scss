@@ -1,0 +1,61 @@
+@use '@angular/material' as mat;
+
+@include mat.core();
+
+// Define custom color palettes for emergency management
+$primary-palette: mat.m2-define-palette(mat.$m2-red-palette, 700);
+$accent-palette: mat.m2-define-palette(mat.$m2-orange-palette, 500);
+$warn-palette: mat.m2-define-palette(mat.$m2-deep-orange-palette);
+
+// Create the theme
+$light-theme: mat.m2-define-light-theme((
+  color: (
+    primary: $primary-palette,
+    accent: $accent-palette,
+    warn: $warn-palette,
+  ),
+  typography: mat.m2-define-typography-config(),
+  density: 0,
+));
+
+// Dark theme
+$dark-theme: mat.m2-define-dark-theme((
+  color: (
+    primary: $primary-palette,
+    accent: $accent-palette,
+    warn: $warn-palette,
+  ),
+));
+
+// Apply the themes
+@include mat.all-component-themes($light-theme);
+
+.dark-theme {
+  @include mat.all-component-colors($dark-theme);
+}
+
+// Emergency-specific CSS variables
+:root {
+  --emergency-critical: #d32f2f;
+  --emergency-high: #f57c00;
+  --emergency-medium: #fbc02d;
+  --emergency-low: #388e3c;
+  --status-active: #1976d2;
+  --status-completed: #689f38;
+  --status-pending: #ffa726;
+  --status-assigned: #0288d1;
+
+  --background-default: #fafafa;
+  --surface: #ffffff;
+  --text-primary: rgba(0, 0, 0, 0.87);
+  --text-secondary: rgba(0, 0, 0, 0.60);
+  --border-color: #e0e0e0;
+}
+
+.dark-theme {
+  --background-default: #121212;
+  --surface: #1e1e1e;
+  --text-primary: rgba(255, 255, 255, 0.87);
+  --text-secondary: rgba(255, 255, 255, 0.60);
+  --border-color: #333333;
+}

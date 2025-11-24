@@ -1,0 +1,109 @@
+<!-- Send Message Button (to be added to dashboards) -->
+<button class="btn btn-primary" (click)="openDialog()" type="button">
+  <i class="fas fa-envelope"></i> Send Message
+</button>
+
+<!-- Message Dialog Modal -->
+<div class="modal" [class.show]="showDialog" [style.display]="showDialog ? 'block' : 'none'" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">
+          <i class="fas fa-paper-plane"></i> Send Message
+        </h5>
+        <button type="button" class="close text-white" (click)="closeDialog()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Success Message -->
+        <div *ngIf="success" class="alert alert-success alert-dismissible fade show" role="alert">
+          <i class="fas fa-check-circle"></i> {{ success }}
+        </div>
+
+        <!-- Error Message -->
+        <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+          <i class="fas fa-exclamation-circle"></i> {{ error }}
+          <button type="button" class="close" (click)="error = ''" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <!-- Recipient Selection -->
+        <div class="form-group">
+          <label for="recipient">
+            <i class="fas fa-user"></i> Select Recipient <span class="text-danger">*</span>
+          </label>
+          <select
+            class="form-control"
+            id="recipient"
+            [(ngModel)]="selectedRecipient"
+            [disabled]="loading">
+            <option [value]="null">-- Choose a recipient --</option>
+            <option *ngFor="let recipient of availableRecipients" [value]="recipient.id">
+              {{ recipient.fullName }} ({{ recipient.username }}) -
+              <span class="badge" [ngClass]="getRecipientRoleBadge(recipient.role)">
+                {{ getRoleDisplayName(recipient.role) }}
+              </span>
+            </option>
+          </select>
+          <small class="form-text text-muted">
+            <i class="fas fa-info-circle"></i> Select the person you want to send a message to
+          </small>
+        </div>
+
+        <!-- Message Content -->
+        <div class="form-group">
+          <label for="messageContent">
+            <i class="fas fa-comment"></i> Message <span class="text-danger">*</span>
+          </label>
+          <textarea
+            class="form-control"
+            id="messageContent"
+            rows="6"
+            [(ngModel)]="messageContent"
+            placeholder="Type your message here..."
+            maxlength="2000"
+            [disabled]="loading"></textarea>
+          <small class="form-text text-muted">
+            {{ messageContent.length }}/2000 characters
+          </small>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="resetForm()"
+          [disabled]="loading">
+          <i class="fas fa-eraser"></i> Reset
+        </button>
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          (click)="closeDialog()"
+          [disabled]="loading">
+          <i class="fas fa-times"></i> Cancel
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="sendMessage()"
+          [disabled]="loading || !selectedRecipient || !messageContent.trim()">
+          <span *ngIf="loading">
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Sending...
+          </span>
+          <span *ngIf="!loading">
+            <i class="fas fa-paper-plane"></i> Send
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Backdrop -->
+<div class="modal-backdrop fade" [class.show]="showDialog" *ngIf="showDialog"></div>
