@@ -75,7 +75,7 @@ All requested tasks for the Disaster Management V2 project have been successfull
 - 49 REST endpoints + 2 WebSocket endpoints
 - 5 JPA entities: User, Department, RescueTeam, EmergencyRequest, Message
 - Security: JWT HS512, RBAC with 5 roles
-- Caching: Redis 7.4.7
+- Caching: Redis 7.x
 - Database: MySQL 8.0
 
 **Frontend**:
@@ -168,7 +168,7 @@ All requested tasks for the Disaster Management V2 project have been successfull
 - Spring Boot 3.2.0 (latest features, auto-configuration)
 - Angular 18 (standalone components, signals)
 - MySQL 8.0 (window functions, JSON support)
-- Redis 7.4.7 (sub-millisecond latency)
+- Redis 7.x (sub-millisecond latency)
 
 **Architecture Excellence**:
 - Layered architecture (clear separation of concerns)

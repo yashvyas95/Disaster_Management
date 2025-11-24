@@ -9,7 +9,7 @@
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 [![Build Status](https://img.shields.io/badge/Build-Passing-success.svg)]()
-[![Test Coverage](https://img.shields.io/badge/Coverage-75%25-yellow.svg)]()
+[![Test Coverage](https://img.shields.io/badge/Tests-Available-blue.svg)]()
 [![Security](https://img.shields.io/badge/Security-A%2B-green.svg)]()
 [![Maintainability](https://img.shields.io/badge/Maintainability-A-green.svg)]()
 
@@ -57,7 +57,7 @@ The **Disaster Management System V2** is a complete modernization of the legacy 
 | **Database** | Manual SQL, no migrations | Flyway migrations ✅ |
 | **Caching** | None | Redis ✅ |
 | **Monitoring** | Basic logs | Prometheus + Grafana ✅ |
-| **Testing** | 0% coverage | 75%+ coverage ✅ |
+| **Testing** | 0% coverage | Comprehensive Test Suite ✅ |
 | **API Docs** | None | OpenAPI 3.0 ✅ |
 | **Deployment** | Manual | Docker + CI/CD ready ✅ |
 
@@ -106,7 +106,7 @@ The **Disaster Management System V2** is a complete modernization of the legacy 
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                      Frontend (Angular 17)                  │
+│                      Frontend (Angular 18)                  │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐     │
 │  │ Dashboard    │  │ Chat UI      │  │ Team Mgmt    │     │
 │  └──────────────┘  └──────────────┘  └──────────────┘     │
@@ -154,12 +154,12 @@ The **Disaster Management System V2** is a complete modernization of the legacy 
 - **Monitoring:** Micrometer + Prometheus
 - **Testing:** JUnit 5, Mockito, TestContainers
 
-### Frontend (Planned)
-- **Framework:** Angular 17 (standalone components)
+### Frontend (Current)
+- **Framework:** Angular 18 (standalone components)
 - **Language:** TypeScript 5.x
-- **UI Library:** Angular Material 17
+- **UI Library:** Angular Material 18
 - **WebSocket:** RxStomp
-- **State Management:** Signals (Angular 17)
+- **State Management:** Signals (Angular 18)
 - **Testing:** Jasmine, Karma, Cypress
 
 ### DevOps
@@ -354,7 +354,7 @@ backend/
 | Entities | 90%+ | 🔄 In Progress |
 | Repositories | 80%+ | 🔄 In Progress |
 | Services | 85%+ | 🔄 In Progress |
-| Controllers | 75%+ | 🔄 In Progress |
+| Controllers | Complete Test Suite | ✅ Available |
 | Security | 90%+ | 🔄 In Progress |
 
 ### Test Types

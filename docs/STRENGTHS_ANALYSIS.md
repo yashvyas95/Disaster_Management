@@ -128,7 +128,7 @@ AND created_at > NOW() - INTERVAL 24 HOUR;
 
 ---
 
-### Caching: Redis 7.4.7
+### Caching: Redis 7.x
 
 **Strategic Benefits:**
 

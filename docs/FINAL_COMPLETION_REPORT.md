@@ -306,7 +306,7 @@ setupWebSocket(): void {
 - **Framework**: Spring Boot 3.2.0
 - **Security**: Spring Security 6.2.0 + JWT + BCrypt
 - **Database**: MySQL 8.0 with Flyway migrations
-- **Cache**: Redis 7.0 with Spring Cache
+- **Cache**: Redis 7.x with Spring Cache
 - **WebSocket**: STOMP over SockJS with JWT authentication
 - **Build**: Maven 3.9.5, Java 21
 

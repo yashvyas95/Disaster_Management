@@ -36,7 +36,7 @@ The Disaster Management System underwent a **complete transformation** from a ba
 |--------|------|------|-------------|
 | **Architecture** | Frontend Only | Full-Stack | +∞ |
 | **Lines of Code** | ~2,000 | ~15,000+ | +650% |
-| **Components** | 6 Basic | 32 Advanced | +433% |
+| **Components** | 6 Basic | 35 Advanced | +483% |
 | **Test Coverage** | 0% | 75%+ | +∞ |
 | **API Endpoints** | 0 | 49 REST | +∞ |
 | **Security Features** | None | 8 Layers | +∞ |

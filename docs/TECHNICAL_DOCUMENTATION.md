@@ -28,8 +28,8 @@ The Disaster Management System V2 is a comprehensive, real-time emergency respon
 - **Multi-Department Support**: Fire, Police, Medical, Accident departments
 
 ### System Metrics
-- **Backend**: 7 Controllers, 49 REST Endpoints, 5 Entities
-- **Frontend**: 32 Components, 9 Services, 3 Role-Specific Dashboards
+- **Backend**: 9 Controllers, 51 REST Endpoints, 5 Entities
+- **Frontend**: 35 Components, 9 Services, 3 Role-Specific Dashboards
 - **Database**: 7 Tables with optimized indexing
 - **Performance**: Stateless architecture with Redis caching
 
@@ -91,7 +91,7 @@ The Disaster Management System V2 is a comprehensive, real-time emergency respon
 | Redis | 7.4.7 | Caching & session management |
 | Flyway | Latest | Database migration |
 | Lombok | Latest | Boilerplate reduction |
-| JWT (JJWT) | 0.11.5 | Token-based authentication |
+| JWT (JJWT) | 0.12.3 | Token-based authentication |
 | SpringDoc OpenAPI | 2.3.0 | API documentation |
 | SockJS | Latest | WebSocket fallback |
 | STOMP | Latest | WebSocket messaging protocol |
