@@ -24,7 +24,7 @@ Welcome to the Disaster Management System V2 documentation! This directory conta
 - [**Strengths Analysis**](STRENGTHS_ANALYSIS.md) - System strengths and capabilities
 
 ### 🔮 Future Development
-- [**Next Features**](NEXT_FEATURES.md) - Planned features and enhancements
+
 - [**Messaging Enhancement**](MESSAGING_ENHANCEMENT.md) - Real-time communication improvements
 
 ### 🔒 Security & Policies
@@ -54,7 +54,7 @@ Welcome to the Disaster Management System V2 documentation! This directory conta
 ### For Project Managers
 1. Read [Task Completion Report](TASK_COMPLETION_REPORT.md)
 2. Review [Final Completion Report](FINAL_COMPLETION_REPORT.md)
-3. Plan with [Next Features](NEXT_FEATURES.md)
+
 
 ## 📋 Documentation Standards
 

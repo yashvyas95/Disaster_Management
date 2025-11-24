@@ -491,14 +491,17 @@ For questions, issues, or contributions:
 
 ## 🎓 Credits
 
-**V2 Development Team:**
-- Architecture & Backend: [Your Name]
-- Frontend Development: [Frontend Dev]
-- DevOps & Infrastructure: [DevOps Engineer]
+**Project Creator & Lead Developer:**
+- **Yash Vyas** - System Architect, Full-Stack Developer & Project Lead
+  - Complete system transformation from V1.0 to V2.0
+  - Modern architecture design and implementation
+  - Spring Boot backend development
+  - Angular frontend modernization
+  - DevOps and Docker containerization
+  - Comprehensive documentation and testing
 
-**Special Thanks:**
-- **Yash Vyas** - Lead Developer & System Architect
-- Spring Boot & Angular communities
+**Built with:**
+- Spring Boot & Angular communities' excellent frameworks and tools
 
 ---
 
@@ -544,41 +547,6 @@ The original V1.0 codebase is preserved for reference and comparison:
 - **Location**: [`OldVersion/`](OldVersion/) directory
 - **Status**: Archived (for historical reference)
 - **Documentation**: [Legacy README](OldVersion/README.md)
-
----
-
-## 📈 Roadmap
-
-### Phase 1: Core Functionality ✅ (Week 1-2)
-- [x] Project setup with Spring Boot 3.2.0
-- [x] JWT authentication & authorization
-- [x] Core entities and repositories
-- [x] Flyway database migrations
-- [x] Docker Compose setup
-
-### Phase 2: Business Logic (Week 3-4)
-- [ ] Emergency request service implementation
-- [ ] Team assignment algorithm
-- [ ] WebSocket chat functionality
-- [ ] Unit tests (75%+ coverage)
-
-### Phase 3: Frontend Integration (Week 5-6)
-- [ ] Angular 17 application setup
-- [ ] Dashboard and request management UI
-- [ ] Real-time chat interface
-- [ ] End-to-end testing
-
-### Phase 4: Production Readiness (Week 7-8)
-- [ ] Redis caching implementation
-- [ ] Performance optimization
-- [ ] Security hardening
-- [ ] Monitoring & alerting
-
-### Phase 5: Advanced Features (Week 9-12)
-- [ ] GPS tracking with maps integration
-- [ ] Analytics dashboard
-- [ ] Mobile app (React Native)
-- [ ] CI/CD pipeline with GitHub Actions
 
 ---
 
