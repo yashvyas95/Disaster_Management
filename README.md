@@ -483,10 +483,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Project Creator & Lead Developer:**
 - **Yash Vyas**
-
-**Built with:**
-- Spring Boot & Angular communities' excellent frameworks and tools
-
 ---
 
 ## 🔄 Version Comparison
