@@ -15,8 +15,8 @@
 
 [🚀 Quick Start](#-getting-started) •
 [📖 Documentation](docs/) •
-[🐛 Report Bug](https://github.com/your-repo/Disaster_Management/issues) •
-[💡 Request Feature](https://github.com/your-repo/Disaster_Management/issues) •
+[🐛 Report Bug](https://github.com/yashvyas95/Disaster_Management/issues) •
+[💡 Request Feature](https://github.com/yashvyas95/Disaster_Management/issues) •
 [👥 Contributing](CONTRIBUTING.md)
 
 </div>
@@ -187,8 +187,8 @@ The **Disaster Management System V2** is a complete modernization of the legacy 
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
-   cd Disaster_Management_V2
+   git clone https://github.com/yashvyas95/Disaster_Management.git
+   cd Disaster_Management
    ```
 
 2. **Set up environment variables**
@@ -483,8 +483,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 For questions, issues, or contributions:
 
-- **Issues:** [GitHub Issues](https://github.com/your-repo/issues)
-- **Discussions:** [GitHub Discussions](https://github.com/your-repo/discussions)
+- **Issues:** [GitHub Issues](https://github.com/yashvyas95/Disaster_Management/issues)
+- **Discussions:** [GitHub Discussions](https://github.com/yashvyas95/Disaster_Management/discussions)
 - **Email:** support@disaster-mgmt.com
 
 ---
