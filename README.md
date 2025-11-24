@@ -479,30 +479,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-## 📞 Support
-
-For questions, issues, or contributions:
-
-- **Issues:** [GitHub Issues](https://github.com/yashvyas95/Disaster_Management/issues)
-- **Discussions:** [GitHub Discussions](https://github.com/yashvyas95/Disaster_Management/discussions)
-- **Email:** support@disaster-mgmt.com
-
----
-
 ## 🎓 Credits
 
 **Project Creator & Lead Developer:**
-- **Yash Vyas** - System Architect, Full-Stack Developer & Project Lead
-  - Complete system transformation from V1.0 to V2.0
-  - Modern architecture design and implementation
-  - Spring Boot backend development
-  - Angular frontend modernization
-  - DevOps and Docker containerization
-  - Comprehensive documentation and testing
-
-**Built with:**
-- Spring Boot & Angular communities' excellent frameworks and tools
-
+- **Yash Vyas**
 ---
 
 ## 🔄 Version Comparison
@@ -547,7 +527,3 @@ The original V1.0 codebase is preserved for reference and comparison:
 - **Location**: [`OldVersion/`](OldVersion/) directory
 - **Status**: Archived (for historical reference)
 - **Documentation**: [Legacy README](OldVersion/README.md)
-
----
-
-**Built with ❤️ for emergency response teams worldwide**
